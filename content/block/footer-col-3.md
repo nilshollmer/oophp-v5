@@ -1,3 +1,3 @@
-#### Footer col 3
+#### Om mig
 
-Med brödtext i ett stycke som säger något trevligt om just detta block, eller kanske en lista av länkar.
+Jag är en 29-årig webbutvecklingsstudent som gillar musik och hundar.

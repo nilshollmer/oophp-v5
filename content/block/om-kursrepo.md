@@ -1,3 +1,5 @@
 #### Kurs och kursrepo
+Den här kursen djupdyker ner i objektorienterade teknologier i PHP.
 
-Skriv något kort om kursen och länka till [kursens hemsida på dbwebb.se](XXX) och till [kursens kursrepo på GitHub](XXX).
+Här kan du hitta [kursens hemsida på dbwebb.se](https://dbwebb.se/kurser/oophp-v5)
+samt [kursens kursrepo på GitHub](https://github.com/dbwebb-se/oophp).
