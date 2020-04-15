@@ -2,7 +2,7 @@
 /**
  * Create routes using $app programming style.
  */
-//var_dump(array_keys(get_defined_vars()));
+// var_dump(array_keys(get_defined_vars()));
 
 
 
@@ -11,6 +11,8 @@
  */
 $app->router->get("guess/init", function () use ($app) {
     // Initialize game session
+    unset($_SESSION["game"], $_SESSION["message"], $_SESSION["cheat"]);
+    $_SESSION["game"] = new Nihl\Guess\Guess();
     return $app->response->redirect("guess/play");
 });
 
@@ -22,33 +24,45 @@ $app->router->get("guess/init", function () use ($app) {
 $app->router->get("guess/play", function () use ($app) {
     // Play the game
     $title = "Guessing game";
+    if (!isset($_SESSION["game"])) {
+        $_SESSION["game"] = new Nihl\Guess\Guess();
+    }
+    $game = $_SESSION["game"];
+    $msg = $_SESSION["message"] ?? null;
+    $tries = $game->tries() ?? null;
+    $answer = (isset($_SESSION["cheat"]) ||  !$tries) ? $game->number() : null;
+
     $data = [
-       "content" => "Guess game in " . __FILE__,
+        "tries" => $tries,
+        "msg" => $msg,
+        "answer" => $answer
     ];
 
     $app->page->add("guess/play", $data);
-    // $app->page->add("guess/debug");
+    $app->page->add("guess/debug");
 
     return $app->page->render([
        "title" => $title,
-   ]);
+    ]);
 });
 
-//
-//
-// /**
-// * Showing message Hello World, rendered within the standard page layout.
-//  */
-// $app->router->get("lek/hello-world-page", function () use ($app) {
-//     $title = "Hello World as a page";
-//     $data = [
-//         "class" => "hello-world",
-//         "content" => "Hello World in " . __FILE__,
-//     ];
-//
-//     $app->page->add("anax/v2/article/default", $data);
-//
-//     return $app->page->render([
-//         "title" => $title,
-//     ]);
-// });
+/**
+ * Take care of post requests
+ */
+$app->router->post("guess/handle_post", function () use ($app) {
+
+    if (isset($_POST["doGuess"]) && isset($_POST["guess"])) {
+        $message = $_SESSION["game"]->makeGuess(intval($_POST["guess"]));
+        $_SESSION["message"] = $message;
+    }
+
+    if (isset($_POST["doInit"])) {
+        return $app->response->redirect("guess/init");
+    }
+
+    if (isset($_POST["doCheat"])) {
+        $_SESSION["cheat"] = $_SESSION["game"]->number();
+    }
+
+    return $app->response->redirect("guess/play");
+});
