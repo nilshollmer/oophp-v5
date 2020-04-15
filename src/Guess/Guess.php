@@ -5,7 +5,7 @@ namespace Nihl\Guess;
 /**
  * Guess my number, a class supporting the game through GET, POST and SESSION.
  */
-// include(__DIR__ . "/GuessException.php");
+
 class Guess
 {
     /**
@@ -46,6 +46,17 @@ class Guess
 
 
     /**
+     * Set the number of tries left
+     *
+     * @param int $number   Number to set the tries variable.
+     */
+
+    public function setTries($number) : void
+    {
+        $this->tries = $number;
+    }
+
+    /**
      * Get number of tries left.
      *
      * @return int as number of tries made.
@@ -55,8 +66,6 @@ class Guess
     {
         return $this->tries;
     }
-
-
 
 
     /**
@@ -89,11 +98,11 @@ class Guess
         if ($number < 1 || $number > 100) {
             throw new GuessException("Guess must be an integer between 1 and 100");
         } elseif ($number > $this->number) {
-            return $number . " is too high!";
+            return "Too high!";
         } elseif ($number < $this->number) {
-            return $number . " is too low!";
+            return "Too low!";
         } else {
-            return $number . " is correct!";
+            return "Correct!";
         }
     }
 }
