@@ -1,11 +1,8 @@
 <?php
-
-
 /**
  * Create routes using $app programming style.
  */
 // var_dump(array_keys(get_defined_vars()));
-
 
 
 /**
@@ -13,10 +10,14 @@
  */
 $app->router->get("guess/init", function () use ($app) {
     // Initialize game session
-    Nihl\Guess\unsetGuess();
-    // unset($_SESSION["game"], $_SESSION["message"], $_SESSION["cheat"]);
+
+    // $gutil = new Nihl\Guess\GuessUtil();
+    // $gutil::unsetGuess();
+    // use function Nihl\Guess\{unsetGuess};
+    // unsetGuess();
+    unset($_SESSION["game"], $_SESSION["message"], $_SESSION["cheat"]);
     $_SESSION["game"] = new Nihl\Guess\Guess();
-    // return $app->response->redirect("guess/play");
+    return $app->response->redirect("guess/play");
 });
 
 
