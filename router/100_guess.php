@@ -1,4 +1,6 @@
 <?php
+
+
 /**
  * Create routes using $app programming style.
  */
@@ -11,11 +13,11 @@
  */
 $app->router->get("guess/init", function () use ($app) {
     // Initialize game session
-    unset($_SESSION["game"], $_SESSION["message"], $_SESSION["cheat"]);
+    Nihl\Guess\unsetGuess();
+    // unset($_SESSION["game"], $_SESSION["message"], $_SESSION["cheat"]);
     $_SESSION["game"] = new Nihl\Guess\Guess();
-    return $app->response->redirect("guess/play");
+    // return $app->response->redirect("guess/play");
 });
-
 
 
 /**
@@ -24,9 +26,7 @@ $app->router->get("guess/init", function () use ($app) {
 $app->router->get("guess/play", function () use ($app) {
     // Play the game
     $title = "Guessing game";
-    if (!isset($_SESSION["game"])) {
-        $_SESSION["game"] = new Nihl\Guess\Guess();
-    }
+
     $game = $_SESSION["game"];
     $msg = $_SESSION["message"] ?? null;
     $tries = $game->tries() ?? null;
@@ -39,7 +39,7 @@ $app->router->get("guess/play", function () use ($app) {
     ];
 
     $app->page->add("guess/play", $data);
-    $app->page->add("guess/debug");
+    // $app->page->add("guess/debug");
 
     return $app->page->render([
        "title" => $title,
@@ -50,10 +50,12 @@ $app->router->get("guess/play", function () use ($app) {
  * Take care of post requests
  */
 $app->router->post("guess/handle_post", function () use ($app) {
-
     if (isset($_POST["doGuess"]) && isset($_POST["guess"])) {
         $message = $_SESSION["game"]->makeGuess(intval($_POST["guess"]));
         $_SESSION["message"] = $message;
+        if ($message === "Correct!") {
+            $_SESSION["game"]->setTries(0);
+        }
     }
 
     if (isset($_POST["doInit"])) {
