@@ -28,5 +28,5 @@ namespace Anax\View;
 <?php }; ?>
 
 <?php if ($answer) {?>
-    <h2>The number is <?= $answer?></h2>
+    <h3>The number is <?= $answer?></h3>
 <?php }; ?>
