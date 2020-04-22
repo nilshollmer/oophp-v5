@@ -2,7 +2,6 @@
 
 namespace Nihl\Guess;
 
-
 /**
  * Useful functions for guessing game
  *

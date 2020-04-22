@@ -52,7 +52,11 @@ $app->router->get("guess/play", function () use ($app) {
  */
 $app->router->post("guess/handle_post", function () use ($app) {
     if (isset($_POST["doGuess"]) && isset($_POST["guess"])) {
-        $message = $_SESSION["game"]->makeGuess(intval($_POST["guess"]));
+        try {
+            $message = $_SESSION["game"]->makeGuess(intval($_POST["guess"]));
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        }
         $_SESSION["message"] = $message;
         if ($message === "Correct!") {
             $_SESSION["game"]->setTries(0);
