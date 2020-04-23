@@ -13,9 +13,9 @@ class DicePlayer
      * @var string  name        Name of player
      * @var integer totalPoints Total points
      */
-    private static $playerNumber = 1;
-    private $name;
-    private $totalPoints;
+    private static $instanceOfObject = 0;
+    protected $name;
+    protected $totalPoints;
 
 
     /**
@@ -25,7 +25,8 @@ class DicePlayer
      */
     public function __construct(string $name = null)
     {
-        $this->name = $name ? $name : "player" . self::$playerNumber++;
+        self::$instanceOfObject++;
+        $this->name = $name ? $name : "player" . self::$instanceOfObject;
         $this->totalPoints = 0;
     }
 
@@ -34,7 +35,7 @@ class DicePlayer
      *
      * @return string           Name of player
      */
-    public getName()
+    public function getName()
     {
         return $this->name;
     }
@@ -44,7 +45,7 @@ class DicePlayer
      *
      * @return integer          Player points
      */
-    public getTotalPoints()
+    public function getTotalPoints()
     {
         return $this->totalPoints;
     }
@@ -55,7 +56,7 @@ class DicePlayer
      * @param int       $points Points to add
      * @return void
      */
-    public addPoints(int $points)
+    public function addPoints(int $points)
     {
         $this->totalPoints += $points;
     }
@@ -66,7 +67,7 @@ class DicePlayer
      *
      * @return boolean
      */
-    public hasWon()
+    public function hasWon()
     {
         return $this->totalPoints >= 100;
     }
