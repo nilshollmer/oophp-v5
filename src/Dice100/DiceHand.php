@@ -19,6 +19,8 @@ class DiceHand
 
     /**
      * Setup number of dice in hand
+     *
+     * @param integer numDice number of dice in hand, default to 2
      */
     public function __construct(int $numDice = 2)
     {
