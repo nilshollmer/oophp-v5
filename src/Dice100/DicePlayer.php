@@ -13,7 +13,7 @@ class DicePlayer
      * @var string  name        Name of player
      * @var integer totalPoints Total points
      */
-    private static $instanceOfObject = 0;
+    private const BASENAME = "Player";
     protected $name;
     protected $totalPoints;
 
@@ -25,8 +25,7 @@ class DicePlayer
      */
     public function __construct(string $name = null)
     {
-        self::$instanceOfObject++;
-        $this->name = $name ? $name : "player" . self::$instanceOfObject;
+        $this->name = $name ? $name : self::BASENAME . rand(1000, 9999);
         $this->totalPoints = 0;
     }
 
@@ -72,11 +71,20 @@ class DicePlayer
         return $this->totalPoints >= 100;
     }
 
-    // /**
-    //  *
-    //  */
-    // public rollHand()
-    // {
-    //     return $this->totalPoints >= 100;
-    // }
+    /**
+     * Roll a hand of dice and return the sum,
+     * If hand contains a value equal to 1, -1 is returned
+     *
+     * @param dicehand $diceHand object
+     *
+     */
+    public rollHand($diceHand)
+    {
+        $diceHand->rollDice();
+
+        if ($diceHand->handContainsOne()) {
+            return -1;
+        }
+        return $diceHand->sumOfHand();
+    }
 }
