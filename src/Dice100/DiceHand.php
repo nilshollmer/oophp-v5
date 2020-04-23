@@ -34,7 +34,7 @@ class DiceHand
      *
      * @return void
      */
-    public function rollHand()
+    public function rollDice()
     {
         $this->handValues = [];
         $this->handGraphic = [];
@@ -56,6 +56,16 @@ class DiceHand
     public function handContainsOne()
     {
         return in_array(1, $this->handValues);
+    }
+
+    /**
+     * Return the amount of dice in hand
+     *
+     * @return int              Number of dice
+     */
+    public function getDiceInHand()
+    {
+        return $this->diceInHand;
     }
 
     /**
