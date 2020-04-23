@@ -9,27 +9,38 @@ namespace Nihl\Dice100;
 class DiceHand
 {
     /**
-     * @var integer hand        Array of values of dice
+     * @var integer diceInHand  Number of dice in hand
+     * @var integer handValues  Array of integer values
+     * @var integer handGraphic Array of string values
      */
-     protected $handValues;
-     protected $handGraphic;
+    protected $diceInHand;
+    protected $handValues;
+    protected $handGraphic;
+
+    /**
+     * Setup number of dice in hand
+     */
+    public function __construct(int $numDice = 2)
+    {
+        $this->diceInHand = $numDice;
+    }
 
     /**
      * Roll dice according to the number of dice to roll
      *
-     * @param int $numDice      Number of dice to throw, default 2
+     * @param int $numDice      Number of dice to throw
      *
      * @return void
      */
-    public function rollHand(int $numDice = 2)
+    public function rollHand()
     {
         $this->handValues = [];
         $this->handGraphic = [];
 
-        for ($i = 0; $i < $numDice; $i++) {
-            $newDice = new Dice();
-            array_push($this->handValues, $newDice->roll());
-            array_push($this->handGraphic, $newDice->graphic());
+        for ($i = 0; $i < $this->diceInHand; $i++) {
+            $dice = new Dice();
+            array_push($this->handValues, $dice->roll());
+            array_push($this->handGraphic, $dice->graphic());
         }
     }
 
@@ -50,9 +61,19 @@ class DiceHand
      *
      * @return array            Array of strings
      */
-    public function getGraphicHand()
+    public function getHandGraphic()
     {
         return $this->handGraphic;
+    }
+
+    /**
+     * Return the values in hand
+     *
+     * @return array            Array of integers
+     */
+    public function getHandValues()
+    {
+        return $this->handValues;
     }
 
     /**
