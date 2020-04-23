@@ -28,10 +28,10 @@ class DiceHandTest extends TestCase
     public function testDiceHandRollWithNoArgument()
     {
         $diceHand = new DiceHand();
-        $diceHand->rollHand();
+        $diceHand->rollDice();
+        $exp = 2;
 
-        $this->assertEquals(2, count($diceHand->getHandValues()));
-        $this->assertEquals(2, count($diceHand->getHandGraphic()));
+        $this->assertEquals($exp, $diceHand->getDiceInHand());
     }
 
     /**
@@ -41,10 +41,10 @@ class DiceHandTest extends TestCase
     public function testDiceHandRollWithArgument()
     {
         $diceHand = new DiceHand(6);
-        $diceHand->rollHand();
+        $diceHand->rollDice();
+        $exp = 6;
 
-        $this->assertEquals(6, count($diceHand->getHandValues()));
-        $this->assertEquals(6, count($diceHand->getHandGraphic()));
+        $this->assertEquals($exp, $diceHand->getDiceInHand());
     }
 
     /**
@@ -58,7 +58,7 @@ class DiceHandTest extends TestCase
         $max = 24;
 
         $diceHand = new DiceHand($numDice);
-        $diceHand->rollHand();
+        $diceHand->rollDice();
 
         $this->assertGreaterThanOrEqual($min, $diceHand->sumOfHand());
         $this->assertLessThanOrEqual($max, $diceHand->sumOfHand());
@@ -73,7 +73,7 @@ class DiceHandTest extends TestCase
         $numDice = 20;
 
         $diceHand = new DiceHand($numDice);
-        $diceHand->rollHand();
+        $diceHand->rollDice();
 
         foreach ($diceHand->getHandValues() as $res) {
             $this->assertIsNumeric($res);
@@ -90,7 +90,7 @@ class DiceHandTest extends TestCase
         $exp = '/(dice-)+[1-6]/';
 
         $diceHand = new DiceHand($numDice);
-        $diceHand->rollHand();
+        $diceHand->rollDice();
         $graphic = $diceHand->getHandGraphic();
 
         foreach ($graphic as $res) {
@@ -107,11 +107,11 @@ class DiceHandTest extends TestCase
         $numDice = 1;
 
         $diceHand = new DiceHand($numDice);
-        $diceHand->rollHand();
+        $diceHand->rollDice();
 
         while ($diceHand->sumOfHand() > 1) {
             $this->assertFalse($diceHand->handContainsOne());
-            $diceHand->rollHand();
+            $diceHand->rollDice();
         }
         $this->assertTrue($diceHand->handContainsOne());
     }

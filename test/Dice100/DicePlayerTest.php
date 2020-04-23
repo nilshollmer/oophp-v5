@@ -9,40 +9,30 @@ use PHPUnit\Framework\TestCase;
  */
 class DicePlayerTest extends TestCase
 {
-
-
     /**
-     * Construct objects with no argument and verify its properties
+     * Construct object with no argument and verify its properties
      */
-    public function testCreateDicePlayersWithoutArgument()
+    public function testCreateDicePlayerWithoutArgument()
     {
-        $dicePlayer1 = new DicePlayer();
-        $dicePlayer2 = new DicePlayer();
-        $this->assertInstanceOf("Nihl\Dice100\DicePlayer", $dicePlayer1);
+        $dp = new DicePlayer();
+        $this->assertInstanceOf("Nihl\Dice100\DicePlayer", $dp);
 
-        $exp = "player1";
-        $this->assertEquals($exp, $dicePlayer1->getName());
-
-        $exp = "player2";
-        $this->assertEquals($exp, $dicePlayer2->getName());
+        $exp = '/(Player)\d{4}/';
+        $this->assertMatchesRegularExpression($exp, $dp->getName());
 
         $exp = 0;
-        $this->assertEquals($exp, $dicePlayer1->getTotalPoints());
+        $this->assertEquals($exp, $dp->getTotalPoints());
     }
 
     /**
-     * Construct object with and without argument and verify its properties
+     * Construct object with argument and verify its properties
      */
-    public function testCreateDicePlayersWithAndWithoutArgument()
+    public function testCreateDicePlayerWithArgument()
     {
         $nils = new DicePlayer("Nils");
-        $dicePlayer4 = new DicePlayer("");
 
         $exp = "Nils";
         $this->assertEquals($exp, $nils->getName());
-
-        $exp = "player4";
-        $this->assertEquals($exp, $dicePlayer4->getName());
     }
 
     /**
