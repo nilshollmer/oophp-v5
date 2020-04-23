@@ -94,8 +94,7 @@ class DiceHandTest extends TestCase
         $graphic = $diceHand->getHandGraphic();
 
         foreach ($graphic as $res) {
-            $this->assertStringStartsWith("dice-", $res);
-            // $this->assertMatchesRegularExpression($exp, $res);
+            $this->assertMatchesRegularExpression($exp, $res);
         }
     }
 
