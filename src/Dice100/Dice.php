@@ -12,8 +12,8 @@ class Dice
      * @var integer SIDES       Number of sides on the dice
      * @var integer lastRoll    Value of the last rolled dice
      */
-     const SIDES = 6;
-     private $lastRoll;
+    const SIDES = 6;
+    private $lastRoll;
 
      /**
       * Roll the dice and get a random result
