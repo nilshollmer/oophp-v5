@@ -4,7 +4,6 @@ namespace Nihl\Dice100;
 
 use PHPUnit\Framework\TestCase;
 
-
 /**
  * Test cases for dice creation, dice roll and graphic output
  */
