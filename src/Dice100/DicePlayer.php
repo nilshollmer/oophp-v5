@@ -13,7 +13,7 @@ class DicePlayer
      * @var string  name        Name of player
      * @var integer totalPoints Total points
      */
-    private const BASENAME = "Player";
+    private $type;
     protected $name;
     protected $totalPoints;
 
@@ -25,7 +25,8 @@ class DicePlayer
      */
     public function __construct(string $name = null)
     {
-        $this->name = $name ? $name : self::BASENAME . rand(1000, 9999);
+        $this->type = "Player";
+        $this->name = $name ? $name : $this->type . rand(1000, 9999);
         $this->totalPoints = 0;
     }
 
@@ -40,6 +41,16 @@ class DicePlayer
     }
 
     /**
+     * Get player type
+     *
+     * @return string           Type of player
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
      * Get player points
      *
      * @return integer          Player points
@@ -47,6 +58,18 @@ class DicePlayer
     public function getTotalPoints()
     {
         return $this->totalPoints;
+    }
+
+    /**
+     * Set player points
+     *
+     * @param integer           Player points
+     *
+     * @return void
+     */
+    public function setTotalPoints(int $points)
+    {
+        $this->totalPoints = $points;
     }
 
     /**
@@ -69,22 +92,5 @@ class DicePlayer
     public function hasWon()
     {
         return $this->totalPoints >= 100;
-    }
-
-    /**
-     * Roll a hand of dice and return the sum,
-     * If hand contains a value equal to 1, -1 is returned
-     *
-     * @param dicehand $diceHand object
-     *
-     */
-    public rollHand($diceHand)
-    {
-        $diceHand->rollDice();
-
-        if ($diceHand->handContainsOne()) {
-            return -1;
-        }
-        return $diceHand->sumOfHand();
     }
 }
