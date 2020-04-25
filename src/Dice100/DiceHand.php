@@ -85,7 +85,7 @@ class DiceHand
      */
     public function getHandValues()
     {
-        return $this->handValues;
+        return implode(", ", $this->handValues);
     }
 
     /**
