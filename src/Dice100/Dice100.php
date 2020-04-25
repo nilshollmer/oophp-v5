@@ -150,7 +150,7 @@ class Dice100
             $this->gamestate["currentPoints"] += $this->diceHand->sumOfHand();
         }
 
-        $this->gamestate["diceHand"] = $this->getDiceHand();
+        $this->gamestate["diceHand"] = $this->getDiceHandAsString();
     }
 
     /**
@@ -215,9 +215,9 @@ class Dice100
      *
      * @return string Values separated by ", "
      */
-    public function getDiceHand()
+    public function getDiceHandAsString()
     {
-        return $this->diceHand->getHandValues();
+        return implode(", ", $this->diceHand->getHandValues());
     }
 
     /**
