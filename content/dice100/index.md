@@ -11,4 +11,4 @@ du samlat till din totala poäng.
 
 Du spelar mot en datorn som försöker göra sitt bästa för att klå dig.
 
-[Starta spelet](dice100/init)
+[Starta spelet](dice100/setup)
