@@ -9,27 +9,34 @@ namespace Nihl\Dice100;
 class DiceComputer extends DicePlayer
 {
     /**
-     * @var BASENAME    basename of computer
-     */
-    private const BASENAME = "Computer";
-
-    /**
-     * Constructor
+     * Constructor for computer
      */
     public function __construct()
     {
-        $this->name = self::BASENAME . rand(1000, 9999);
+        $this->type = "Computer";
+        $this->name = $this->type . rand(1000, 9999);
         $this->totalPoints = 0;
     }
 
     /**
-     * Checks value of hand against total points and calculates whether to
+     * Checks value of hand against currentPoints and calculates whether to
      * roll och hold
      *
      * @return Boolean
      */
-    public function calculateMove() : boolean
+    public function calculateMove($currentPoints) : bool
     {
-        // if $this->getTotalPoints() >
+        $threshold = 16;
+        $winning = 100;
+
+        if (($this->totalPoints + $currentPoints) >= $winning) {
+            return false;
+        }
+
+        if ($currentPoints > $threshold) {
+            return false;
+        }
+
+        return true;
     }
 }
