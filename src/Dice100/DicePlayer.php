@@ -10,10 +10,11 @@ namespace Nihl\Dice100;
 class DicePlayer
 {
     /**
+     * @var string  type        Type of player
      * @var string  name        Name of player
      * @var integer totalPoints Total points
      */
-    private $type;
+    protected $type;
     protected $name;
     protected $totalPoints;
 
