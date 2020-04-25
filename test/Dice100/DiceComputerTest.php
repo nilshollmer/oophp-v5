@@ -78,4 +78,16 @@ class DiceComputerTest extends TestCase
 
         $this->assertFalse($move);
     }
+
+    /**
+     * Construct object and get its type
+     */
+     public function testDiceComputerGetType()
+     {
+         $dicecomputer = new DiceComputer();
+         $exp = "Computer";
+         $res = $dicecomputer->getType();
+
+         $this->assertEquals($exp, $res);
+     }
 }
