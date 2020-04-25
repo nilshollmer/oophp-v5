@@ -10,13 +10,11 @@ class Dice100
 {
     /**
      * @var string      $players    Players and computers in the game
-     * @var int         $numOfDice  Number of dice used
      * @var DiceHand    $diceHand   Dicehand used to roll
      * @var array       $gamestate  Array of variables that change during the game
      */
 
     private $players;
-    private $numOfDice;
     private $diceHand;
     private $gamestate;
 
@@ -30,8 +28,7 @@ class Dice100
     public function __construct(int $numDice = 2)
     {
         $this->players = [];
-        $this->numOfDice = $numDice;
-        $this->diceHand = new DiceHand($this->numOfDice);
+        $this->diceHand = new DiceHand($numDice);
         $this->gamestate = [];
     }
 
@@ -86,6 +83,7 @@ class Dice100
         switch ($command) {
             case "Roll":
                 $this->rollHand();
+                $this->checkHand();
                 break;
             case "Hold":
                 $this->holdHand();
@@ -99,6 +97,7 @@ class Dice100
                 $move = $this->gamestate["active"]->calculateMove($this->gamestate["currentPoints"]);
                 if ($move) {
                     $this->rollHand();
+                    $this->checkHand();
                     break;
                 }
 
@@ -133,25 +132,31 @@ class Dice100
     }
 
     /**
-     * Roll diceHand
-     * If diceHand contains a value equal to 1, end the turn
-     * Else, Add diceHand sum to "currentPoints" variable
-     * Finally, Update "diceHand" variable
+     * Roll diceHand and update "diceHand" variable
      *
      * @return void
      */
     private function rollHand()
     {
         $this->diceHand->rollDice();
-
+        $this->gamestate["diceHand"] = $this->getDiceHandAsString();
+    }
+    /**
+     *
+     * Check if diceHand contains a value equal to 1, end the turn
+     * Else, Add diceHand sum to "currentPoints" variable
+     *
+     * @return void
+     */
+    private function checkHand()
+    {
         if ($this->diceHand->handContainsOne()) {
             $this->endTurn();
         } else {
             $this->gamestate["currentPoints"] += $this->diceHand->sumOfHand();
         }
-
-        $this->gamestate["diceHand"] = $this->getDiceHandAsString();
     }
+
 
     /**
      * Augment "turnCounter" variable
@@ -215,7 +220,7 @@ class Dice100
      *
      * @return string Values separated by ", "
      */
-    public function getDiceHandAsString()
+    private function getDiceHandAsString()
     {
         return implode(", ", $this->diceHand->getHandValues());
     }
