@@ -8,39 +8,49 @@
 /**
  * Initalize guessing game and redirect
  */
-$app->router->get("dice100/init", function () use ($app) {
-    // Initialize game session
-    
-    // $gutil = new Nihl\Guess\GuessUtil();
-    // $gutil::unsetGuess();
-    // use function Nihl\Guess\{unsetGuess};
-    // unsetGuess();
-    // unset($_SESSION["game"], $_SESSION["message"], $_SESSION["cheat"]);
-    // $_SESSION["game"] = new Nihl\Guess\Guess();
-    return $app->response->redirect("dice100/play");
+$app->router->get("dice100/setup", function () use ($app) {
+    // Setup game session
+
+    $title = "Dice100 | Setup";
+
+    $app->page->add("dice100/setup");
+    // $app->page->add("dice100/debug");
+
+    return $app->page->render([
+       "title" => $title,
+    ]);
 });
 
+$app->router->get("dice100/init", function () use ($app) {
+    // Initialize game session
+    $name = isset($_GET["name"]) ? $_GET["name"] : "";
+    $numComp = isset($_GET["numComp"]) ? $_GET["numComp"] : 1;
+    $dice = isset($_GET["dice"]) ? $_GET["dice"] : 2;
+
+    unset($_SESSION["game"]
+);
+    $_SESSION["game"] = new Nihl\Dice100\Dice100($dice);
+    $_SESSION["game"]->createPlayers($name, $numComp);
+    $_SESSION["game"]->initGamestate();
+
+    return $app->response->redirect("dice100/play");
+});
 
 /**
  * Play dice100
  */
 $app->router->get("dice100/play", function () use ($app) {
     // Play the game
-    $title = "Dice100";
-    //
-    // $game = $_SESSION["game"];
-    // $msg = $_SESSION["message"] ?? null;
-    // $tries = $game->tries() ?? null;
-    // $answer = (isset($_SESSION["cheat"]) ||  !$tries) ? $game->number() : null;
-    //
-    // $data = [
-    //     "tries" => $tries,
-    //     "msg" => $msg,
-    //     "answer" => $answer
-    // ];
-    //
-    // $app->page->add("guess/play", $data);
-    // $app->page->add("guess/debug");
+    $title = "Dice100 | Play";
+    $game = $_SESSION["game"];
+
+    $data = [
+        "game" => $game,
+        "gamestate" => $game->getGamestate()
+    ];
+
+    $app->page->add("dice100/play", $data);
+    // $app->page->add("dice100/debug");
 
     return $app->page->render([
        "title" => $title,
@@ -50,26 +60,21 @@ $app->router->get("dice100/play", function () use ($app) {
 /**
  * Take care of post requests
  */
-// $app->router->post("guess/handle_post", function () use ($app) {
-//     if (isset($_POST["doGuess"]) && isset($_POST["guess"])) {
-//         try {
-//             $message = $_SESSION["game"]->makeGuess(intval($_POST["guess"]));
-//         } catch (Exception $e) {
-//             $message = $e->getMessage();
-//         }
-//         $_SESSION["message"] = $message;
-//         if ($message === "Correct!") {
-//             $_SESSION["game"]->setTries(0);
-//         }
-//     }
-//
-//     if (isset($_POST["doInit"])) {
-//         return $app->response->redirect("guess/init");
-//     }
-//
-//     if (isset($_POST["doCheat"])) {
-//         $_SESSION["cheat"] = $_SESSION["game"]->number();
-//     }
-//
-//     return $app->response->redirect("guess/play");
-// });
+$app->router->post("dice100/action", function () use ($app) {
+    $_SESSION["game"]->runGame($_POST["action"]);
+
+    return $app->response->redirect("dice100/play");
+});
+
+/**
+ * Take care of post requests
+ */
+$app->router->post("dice100/restart", function () use ($app) {
+    foreach ($_SESSION["game"]->getPlayers() as $player) {
+        $player->setTotalPoints(0);
+    }
+
+    $_SESSION["game"]->initGamestate();
+
+    return $app->response->redirect("dice100/play");
+});
