@@ -9,43 +9,51 @@ namespace Nihl\Dice100;
 class DiceHand
 {
     /**
-     * @var integer diceInHand  Number of dice in hand
-     * @var integer handValues  Array of integer values
-     * @var integer handGraphic Array of string values
+     * @var array   diceInHand  Array of Dice
+     * @var array   handValues  Array of integer values
      */
     protected $diceInHand;
     protected $handValues;
-    protected $handGraphic;
 
     /**
-     * Setup number of dice in hand
+     * Setup array of dice
      *
      * @param integer numDice number of dice in hand, default to 2
      */
     public function __construct(int $numDice = 2)
     {
-        $this->diceInHand = $numDice;
+        $this->diceInHand = [];
+        $this->handValues = [];
+
+        for ($i = 0; $i < $numDice; $i++) {
+            $this->diceInHand[] = new Dice();
+        }
     }
 
     /**
      * Roll dice according to the number of dice to roll
      *
-     * @param int $numDice      Number of dice to throw
      *
      * @return void
      */
     public function rollDice()
     {
         $this->handValues = [];
-        $this->handGraphic = [];
-
-        for ($i = 0; $i < $this->diceInHand; $i++) {
-            $dice = new Dice();
-            array_push($this->handValues, $dice->roll());
-            array_push($this->handGraphic, $dice->graphic());
+        foreach($this->diceInHand as $dice) {
+            $dice->roll();
+            $this->addToHandValues($dice->getLastRoll());
         }
     }
 
+    /**
+     * Add a value to the end of handValues array
+     *
+     * @param integer   $value      Value to add to array
+     */
+    public function addToHandValues($value)
+    {
+        $this->handValues[] = $value;
+    }
 
     /**
      * Check if dice array contains a dice with value 1
@@ -56,26 +64,6 @@ class DiceHand
     public function handContainsOne()
     {
         return in_array(1, $this->handValues);
-    }
-
-    /**
-     * Return the amount of dice in hand
-     *
-     * @return int              Number of dice
-     */
-    public function getDiceInHand()
-    {
-        return $this->diceInHand;
-    }
-
-    /**
-     * Return the graphical representations of the dice
-     *
-     * @return array            Array of strings
-     */
-    public function getHandGraphic()
-    {
-        return $this->handGraphic;
     }
 
     /**
