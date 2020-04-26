@@ -28,24 +28,10 @@ class DiceTest extends TestCase
         $max = 6;
 
         $dice = new Dice();
-        $roll = $dice->roll();
+        $dice->roll();
+        $roll = $dice->getLastRoll();
 
         $this->assertGreaterThanOrEqual($min, $roll);
         $this->assertLessThanOrEqual($max, $roll);
-    }
-
-
-    /**
-     * Construct object, roll dice and verify that graphic outputs string in
-     * the following format: "dice-*"
-     */
-    public function testDiceGraphic()
-    {
-        $dice = new Dice();
-        $roll = $dice->roll();
-        $res = $dice->graphic();
-        $exp = "dice-" . $roll;
-
-        $this->assertEquals($exp, $res);
     }
 }
