@@ -15,24 +15,34 @@ class Dice
     const SIDES = 6;
     private $lastRoll;
 
-     /**
-      * Roll the dice and get a random result
-      *
-      * @return int             Number between 1 and 6
-      */
+    /**
+     * Roll the dice and set lastRoll variable to result
+     *
+     * @return void
+     */
     public function roll()
     {
-        $this->lastRoll = rand(1, self::SIDES);
-        return $this->lastRoll;
+        $this->setLastRoll(rand(1, self::SIDES));
     }
 
     /**
-     * Get a graphical representation of the last dice
+     * Update last roll with value
      *
-     * @return string
+     * @param integer $value
+     *
      */
-    public function graphic()
+    public function setLastRoll($value)
     {
-        return "dice-" . $this->lastRoll;
+        $this->lastRoll = $value;
+    }
+
+    /**
+     * Fetch last roll
+     *
+     * @return integer          Last roll
+     */
+    public function getLastRoll()
+    {
+        return $this->lastRoll;
     }
 }
