@@ -10,8 +10,6 @@ use PHPUnit\Framework\TestCase;
  */
 class DiceHandTest extends TestCase
 {
-
-
     /**
      * Construct object and verify instance of object
      */
@@ -31,7 +29,7 @@ class DiceHandTest extends TestCase
         $diceHand->rollDice();
         $exp = 2;
 
-        $this->assertEquals($exp, $diceHand->getDiceInHand());
+        $this->assertEquals($exp, count($diceHand->getHandValues()));
     }
 
     /**
@@ -44,7 +42,7 @@ class DiceHandTest extends TestCase
         $diceHand->rollDice();
         $exp = 6;
 
-        $this->assertEquals($exp, $diceHand->getDiceInHand());
+        $this->assertEquals($exp, count($diceHand->getHandValues()));
     }
 
     /**
@@ -77,24 +75,6 @@ class DiceHandTest extends TestCase
 
         foreach ($diceHand->getHandValues() as $res) {
             $this->assertIsNumeric($res);
-        }
-    }
-
-    /**
-     * Construct object with argument and verify that handValues is an
-     * array of strings
-     */
-    public function testDiceHandGraphic()
-    {
-        $numDice = 20;
-        $exp = '/(dice-)+[1-6]/';
-
-        $diceHand = new DiceHand($numDice);
-        $diceHand->rollDice();
-        $graphic = $diceHand->getHandGraphic();
-
-        foreach ($graphic as $res) {
-            $this->assertMatchesRegularExpression($exp, $res);
         }
     }
 
