@@ -43,7 +43,7 @@ namespace Anax\View;
 
     <?php } else {?>
         <h3><?= $gamestate["hasWon"]->getName() ?> HAS WON! </h3>
-        <a href="/">New game</a>
+        <a href="setup">New game</a>
 
     <?php }?>
 </div>
