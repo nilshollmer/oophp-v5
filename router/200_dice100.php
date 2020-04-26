@@ -27,8 +27,7 @@ $app->router->get("dice100/init", function () use ($app) {
     $numComp = isset($_GET["numComp"]) ? $_GET["numComp"] : 1;
     $dice = isset($_GET["dice"]) ? $_GET["dice"] : 2;
 
-    unset($_SESSION["game"]
-);
+    unset($_SESSION["game"]);
     $_SESSION["game"] = new Nihl\Dice100\Dice100($dice);
     $_SESSION["game"]->createPlayers($name, $numComp);
     $_SESSION["game"]->initGamestate();
