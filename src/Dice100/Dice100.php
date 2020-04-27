@@ -5,12 +5,21 @@ namespace Nihl\Dice100;
 /**
  * Main game class
  *
- * "checkHand"      Takes a diceHand object as argument and checks if it
+ * API:
+ * initGamestate()  Initiates gamestate variable
+ * createPlayers()  Adds a player and a number of computers to the $players array
+ *
+ * checkHand()      Takes a diceHand object as argument and checks if it
  *                  contains 1 or not and acts accordingly.
- * "holdHand"       Takes points in currentPoints variable and adds to
+ * holdHand()       Takes points in currentPoints variable and adds to
  *                  active player, checks if they have won and ends the turn.
- * "startNextTurn"  End the turn, change active player and reset turn related variables.
- * "computerMove"   Calls computers calculateMove method and returns boolean
+ * startNextTurn()  End the turn, change active player and reset turn related variables.
+ * computerMove()   Calls computers calculateMove method and returns boolean
+ * resetPlayers()   Reset player points
+ *
+ * getGamestate()   returns gamestate variable
+ * getPlayer()      Returns a player using index
+ * getPlayers()     Returns all player
  */
 
 class Dice100

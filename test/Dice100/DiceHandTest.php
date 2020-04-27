@@ -79,6 +79,21 @@ class DiceHandTest extends TestCase
     }
 
     /**
+     * Construct object with argument, call getDiceHandAsString and verify
+     * that result is a string
+     */
+    public function testDiceHandValuesAsString()
+    {
+        $numDice = 20;
+
+        $diceHand = new DiceHand($numDice);
+        $diceHand->rollDice();
+
+        $res = $diceHand->getDiceHandAsString();
+        $this->assertIsString($res);
+    }
+
+    /**
      * Construct object with argument and verify that handContainsOne()
      * returns true if $handValues contains a value of
      */
@@ -88,7 +103,7 @@ class DiceHandTest extends TestCase
 
         $diceHand = new DiceHand($numDice);
         $diceHand->addToHandValues(1);
-        
+
         $this->assertTrue($diceHand->handContainsOne());
     }
 
