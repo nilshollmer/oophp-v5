@@ -76,14 +76,14 @@ class DicePlayerTest extends TestCase
     /**
      * Construct object and get its type
      */
-     public function testDicePlayerGetType()
-     {
-         $diceplayer = new DicePlayer();
-         $exp = "Player";
-         $res = $diceplayer->getType();
+    public function testDicePlayerGetType()
+    {
+        $diceplayer = new DicePlayer();
+        $exp = "Player";
+        $res = $diceplayer->getType();
 
-         $this->assertEquals($exp, $res);
-     }
+        $this->assertEquals($exp, $res);
+    }
 
     /**
      *

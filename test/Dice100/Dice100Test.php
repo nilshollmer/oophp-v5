@@ -127,7 +127,6 @@ class Dice100Test extends TestCase
         $this->game->checkHand($this->diceHand);
         $this->game->checkHand($this->diceHand);
         $this->assertFalse($this->game->computerMove());
-
     }
 
     /**
@@ -184,14 +183,14 @@ class Dice100Test extends TestCase
      */
     public function testResetPlayerPoints()
     {
-        foreach($this->game->getPlayers() as $player) {
+        foreach ($this->game->getPlayers() as $player) {
             $player->addPoints(50);
             $exp = 50;
             $this->assertEquals($exp, $player->getTotalPoints());
         }
 
         $this->game->resetPlayers();
-        foreach($this->game->getPlayers() as $player) {-
+        foreach ($this->game->getPlayers() as $player) {-
             $exp = 0;
             $this->assertEquals($exp, $player->getTotalPoints());
         }
