@@ -39,7 +39,7 @@ class DiceHand
     public function rollDice()
     {
         $this->handValues = [];
-        foreach($this->diceInHand as $dice) {
+        foreach ($this->diceInHand as $dice) {
             $dice->roll();
             $this->addToHandValues($dice->getLastRoll());
         }

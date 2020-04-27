@@ -71,7 +71,7 @@ class Dice100
     public function createPlayers($name = "", $comp = 1)
     {
         $this->players[] = new DicePlayer($name);
-        for($i = 0; $i < $comp; $i++) {
+        for ($i = 0; $i < $comp; $i++) {
             $this->players[] = new DiceComputer();
         }
     }
