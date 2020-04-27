@@ -28,7 +28,8 @@ $app->router->get("dice100/init", function () use ($app) {
     $dice = isset($_GET["dice"]) ? $_GET["dice"] : 2;
 
     unset($_SESSION["game"]);
-    $_SESSION["game"] = new Nihl\Dice100\Dice100($dice);
+    $_SESSION["game"] = new Nihl\Dice100\Dice100();
+    $_SESSION["diceHand"] = new Nihl\Dice100\DiceHand($dice);
     $_SESSION["game"]->createPlayers($name, $numComp);
     $_SESSION["game"]->initGamestate();
 
@@ -45,7 +46,8 @@ $app->router->get("dice100/play", function () use ($app) {
 
     $data = [
         "game" => $game,
-        "gamestate" => $game->getGamestate()
+        "gamestate" => $game->getGamestate(),
+        "diceHand" => $_SESSION["diceHand"]
     ];
 
     $app->page->add("dice100/play", $data);
@@ -60,7 +62,27 @@ $app->router->get("dice100/play", function () use ($app) {
  * Take care of post requests
  */
 $app->router->post("dice100/action", function () use ($app) {
-    $_SESSION["game"]->runGame($_POST["action"]);
+    switch ($_POST["action"]) {
+        case "Roll":
+            $_SESSION["diceHand"]->rollDice();
+            $_SESSION["game"]->checkHand($_SESSION["diceHand"]);
+            break;
+        case "Hold":
+            $_SESSION["game"]->holdHand();
+            break;
+        case "Next Turn":
+            $_SESSION["game"]->startNextTurn();
+            break;
+        case "Pass":
+            if ($_SESSION["game"]->computerMove()) {
+                $_SESSION["diceHand"]->rollDice();
+                $_SESSION["game"]->checkHand($_SESSION["diceHand"]);
+                break;
+            }
+            $_SESSION["game"]->holdHand();
+            break;
+    }
+    // $_SESSION["game"]->runGame($_POST["action"]);
 
     return $app->response->redirect("dice100/play");
 });

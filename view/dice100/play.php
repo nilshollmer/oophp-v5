@@ -38,7 +38,7 @@ namespace Anax\View;
 
         <p>Points: <?= $gamestate["currentPoints"] ?></p>
         <p class="dice-utf8">
-            Rolls: <?= $gamestate["diceHand"] ?>
+            Rolls: <?= $diceHand->getDiceHandAsString() ?>
         </p>
 
     <?php } else {?>

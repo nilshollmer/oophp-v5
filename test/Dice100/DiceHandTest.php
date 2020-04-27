@@ -80,19 +80,29 @@ class DiceHandTest extends TestCase
 
     /**
      * Construct object with argument and verify that handContainsOne()
-     * returns true if $handValues contains a value of 1 and false otherwise
+     * returns true if $handValues contains a value of
      */
-    public function testDiceHandContainsOne()
+    public function testDiceHandContainsOneTrue()
     {
         $numDice = 1;
 
         $diceHand = new DiceHand($numDice);
-        $diceHand->rollDice();
-
-        while ($diceHand->sumOfHand() > 1) {
-            $this->assertFalse($diceHand->handContainsOne());
-            $diceHand->rollDice();
-        }
+        $diceHand->addToHandValues(1);
+        
         $this->assertTrue($diceHand->handContainsOne());
+    }
+
+    /**
+     * Construct object with argument and verify that handContainsOne()
+     * returns false
+     */
+    public function testDiceHandContainsOneFalse()
+    {
+        $numDice = 1;
+
+        $diceHand = new DiceHand($numDice);
+        $diceHand->addToHandValues(4);
+
+        $this->assertFalse($diceHand->handContainsOne());
     }
 }

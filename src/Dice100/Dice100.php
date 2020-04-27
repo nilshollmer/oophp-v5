@@ -3,32 +3,35 @@
 namespace Nihl\Dice100;
 
 /**
+ * Main game class
  *
+ * "checkHand"      Takes a diceHand object as argument and checks if it
+ *                  contains 1 or not and acts accordingly.
+ * "holdHand"       Takes points in currentPoints variable and adds to
+ *                  active player, checks if they have won and ends the turn.
+ * "startNextTurn"  End the turn, change active player and reset turn related variables.
+ * "computerMove"   Calls computers calculateMove method and returns boolean
  */
 
 class Dice100
 {
     /**
      * @var string      $players    Players and computers in the game
-     * @var DiceHand    $diceHand   Dicehand used to roll
      * @var array       $gamestate  Array of variables that change during the game
      */
 
     private $players;
-    private $diceHand;
     private $gamestate;
 
     /**
      * Initialize game with variables that don't change during the game
      *
-     * @param int       $numDice    Number of dice used in the game
      *
      * @return void
      */
-    public function __construct(int $numDice = 2)
+    public function __construct()
     {
         $this->players = [];
-        $this->diceHand = new DiceHand($numDice);
         $this->gamestate = [];
     }
 
@@ -43,7 +46,6 @@ class Dice100
             "turnCounter" => 0,
             "turnIsOver" => false,
             "hasWon" => null,
-            "diceHand" => "",
             "active" => $this->players[0],
             "currentPoints" => 0
         ];
@@ -66,45 +68,16 @@ class Dice100
     }
 
     /**
-     * Main game function
-     * Takes following commands: "Roll", "Hold", "Pass", "Next Turn"
+     * Call Computer calculateMove method
      *
-     * "Roll"       Roll dice and accumulate points, dice of 1 ends turn.
-     * "Hold"       Save accumulated points for the active player and check
-     *              if they have won.
-     * "Next Turn"  End the turn, change active player and reset turn related variables.
-     * "Pass"       Make a choice based on calculateMove function,
-     *              Used by computer player.
-     *
-     * @return void
+     * @return boolean
      */
-    public function runGame($command)
+    public function computerMove()
     {
-        switch ($command) {
-            case "Roll":
-                $this->rollHand();
-                $this->checkHand();
-                break;
-            case "Hold":
-                $this->holdHand();
-                $this->checkWinner();
-                break;
-            case "Next Turn":
-                $this->moveTurnCounter();
-                $this->startNextTurn();
-                break;
-            case "Pass":
-                $move = $this->gamestate["active"]->calculateMove($this->gamestate["currentPoints"]);
-                if ($move) {
-                    $this->rollHand();
-                    $this->checkHand();
-                    break;
-                }
-
-                $this->holdHand();
-                $this->checkWinner();
-                break;
+        if ($this->gamestate["active"]->getType() == "Computer") {
+            return $this->gamestate["active"]->calculateMove($this->gamestate["currentPoints"]);
         }
+        return false;
     }
 
     /**
@@ -112,49 +85,55 @@ class Dice100
      *
      * @return void
      */
-    private function startNextTurn()
+    public function startNextTurn()
     {
+        $this->moveTurnCounter();
         $this->gamestate["currentPoints"] = 0;
-        $this->gamestate["diceHand"] = "";
         $this->gamestate["turnIsOver"] = false;
         $this->gamestate["active"] = $this->getPlayer($this->gamestate["turnCounter"]);
     }
 
     /**
-     * Add accumulated points to the active players totalPoints and end the turn
+     * Add accumulated points to the active players totalPoints
+     * Check if player has won
+     * end the turn
      *
      * @return void
      */
-    private function holdHand()
+    public function holdHand()
     {
         $this->gamestate["active"]->addPoints($this->gamestate["currentPoints"]);
-        $this->gamestate["turnIsOver"] = true;
+        $this->checkWinner($this->gamestate["active"]);
+        $this->endTurn();
     }
 
     /**
-     * Roll diceHand and update "diceHand" variable
-     *
-     * @return void
-     */
-    private function rollHand()
-    {
-        $this->diceHand->rollDice();
-        $this->gamestate["diceHand"] = $this->getDiceHandAsString();
-    }
-    /**
-     *
      * Check if diceHand contains a value equal to 1, end the turn
      * Else, Add diceHand sum to "currentPoints" variable
      *
+     * @param DiceHand $diceHand
+     *
      * @return void
      */
-    private function checkHand()
+    public function checkHand($diceHand)
     {
-        if ($this->diceHand->handContainsOne()) {
+        if ($diceHand->handContainsOne()) {
             $this->endTurn();
         } else {
-            $this->gamestate["currentPoints"] += $this->diceHand->sumOfHand();
+            $this->addDiceHandToCurrentPoints($diceHand);
         }
+    }
+
+    /**
+     * Add diceHand sum to "currentPoints" variable
+     *
+     * @param DiceHand $diceHand
+     *
+     * @return void
+     */
+    private function addDiceHandToCurrentPoints($diceHand)
+    {
+        $this->gamestate["currentPoints"] += $diceHand->sumOfHand();
     }
 
 
@@ -183,46 +162,18 @@ class Dice100
     }
 
     /**
-     * Check if active player has accumulated 100 points or more.
+     * Check if a player has accumulated 100 points or more.
      * If true, change "hasWon" variable to active player
+     *
+     * @param Player $player object
      *
      * @return void
      */
-    private function checkWinner()
+    private function checkWinner($player)
     {
-        if ($this->gamestate["active"]->hasWon()) {
-            $this->gamestate["hasWon"] = $this->gamestate["active"];
+        if ($player->hasWon()) {
+            $this->gamestate["hasWon"] = $player;
         }
-    }
-
-    /**
-     * Fetches a player object
-     *
-     * @return Player
-     */
-    public function getPlayer(int $index)
-    {
-        return $this->players[$index];
-    }
-
-    /**
-     * Fetches array of all players
-     *
-     * @return array Array of players
-     */
-    public function getPlayers()
-    {
-        return $this->players;
-    }
-
-    /**
-     * Fetches array of all players
-     *
-     * @return string Values separated by ", "
-     */
-    private function getDiceHandAsString()
-    {
-        return implode(", ", $this->diceHand->getHandValues());
     }
 
     /**
@@ -245,5 +196,24 @@ class Dice100
         foreach ($this->players as $player) {
             $player->setTotalPoints(0);
         }
+    }
+    /**
+     * Fetches a player object
+     *
+     * @return Player
+     */
+    public function getPlayer(int $index)
+    {
+        return $this->players[$index];
+    }
+
+    /**
+     * Fetches array of all players
+     *
+     * @return array Array of players
+     */
+    public function getPlayers()
+    {
+        return $this->players;
     }
 }

@@ -77,6 +77,16 @@ class DiceHand
     }
 
     /**
+     * Return the values in hand
+     *
+     * @return array            Array of integers
+     */
+    public function getDiceHandAsString()
+    {
+        return implode(", ", $this->handValues);
+    }
+
+    /**
      * Returns sum of the hand of dice as an integer
      *
      * @return int             Sum of the hand
