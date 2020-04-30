@@ -118,16 +118,18 @@ class DiceController implements AppInjectableInterface
         $title = "Dice100 | Play";
 
         $game = $session->get("game");
-
+        $diceHand = $session->get("diceHand");
+        
 
         $data = [
             "game" => $game,
             "gamestate" => $game->getGamestate(),
-            "diceHand" => $session->get("diceHand")
+            "diceHand" => $diceHand
         ];
 
-        $this->app->page->add("dice/play", $data);
-        // $this->app->page->add("dice/debug");
+        $page->add("dice/play", $data);
+        // $page->add("dice/debug");
+        // $page->add("dice/histogram");
 
         return $page->render([
            "title" => $title,
@@ -259,5 +261,4 @@ class DiceController implements AppInjectableInterface
         $services = implode(", ", $this->app->getServices());
         return __METHOD__ . "<p>\$app contains: $services";
     }
-
 }
