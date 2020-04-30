@@ -6,8 +6,10 @@ namespace Nihl\Dice100;
  * Class for holding dice objects, rolling dice and calculating results
  */
 
-class DiceHand
+class DiceHand implements HistogramInterface
 {
+    use HistogramTrait;
+
     /**
      * @var array   diceInHand  Array of Dice
      * @var array   handValues  Array of integer values
@@ -43,6 +45,7 @@ class DiceHand
             $dice->roll();
             $this->addToHandValues($dice->getLastRoll());
         }
+        $this->serie[] = $this->handValues();
     }
 
     /**
