@@ -45,7 +45,7 @@ class DiceHand implements HistogramInterface
             $dice->roll();
             $this->addToHandValues($dice->getLastRoll());
         }
-        $this->serie[] = $this->handValues();
+        $this->serie = $this->handValues;
     }
 
     /**

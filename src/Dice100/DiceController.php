@@ -95,6 +95,7 @@ class DiceController implements AppInjectableInterface
         // Create a new game and a new dicehand
         $session->set("game", new Dice100());
         $session->set("diceHand", new DiceHand($dice));
+        $session->set("histogram", new Histogram());
 
         // Create players and initialize gamestate
         $session->get("game")->createPlayers($name, $numComp);
@@ -117,19 +118,21 @@ class DiceController implements AppInjectableInterface
         $session = $this->app->session;
         $title = "Dice100 | Play";
 
-        $game = $session->get("game");
         $diceHand = $session->get("diceHand");
-        
+        $game = $session->get("game");
+        $histogram = $session->get("histogram");
+
 
         $data = [
             "game" => $game,
             "gamestate" => $game->getGamestate(),
-            "diceHand" => $diceHand
+            "diceHand" => $diceHand,
+            "histogram" => $histogram
         ];
 
         $page->add("dice/play", $data);
+        $page->add("dice/histogram", $data, "sidebar-right");
         // $page->add("dice/debug");
-        // $page->add("dice/histogram");
 
         return $page->render([
            "title" => $title,
@@ -178,6 +181,7 @@ class DiceController implements AppInjectableInterface
 
         $session->get("diceHand")->rollDice();
         $session->get("game")->checkHand($session->get("diceHand"));
+        $session->get("histogram")->injectData($session->get("diceHand"));
 
         return $response->redirect("dice/play");
     }
@@ -229,6 +233,7 @@ class DiceController implements AppInjectableInterface
         if ($session->get("game")->computerMove()) {
             $session->get("diceHand")->rollDice();
             $session->get("game")->checkHand($session->get("diceHand"));
+            $session->get("histogram")->injectData($session->get("diceHand"));
         } else {
             $session->get("game")->holdHand();
         }
