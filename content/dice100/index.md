@@ -1,4 +1,4 @@
-Dice100
+Dice100 
 =============
 
 I Dice100 kastar du tärningar mot en dator och försöker samla ihop 100 poäng.

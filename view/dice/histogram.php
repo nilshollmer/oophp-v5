@@ -11,13 +11,7 @@ namespace Anax\View;
 
 
 ?>
-<hr>
-<pre>
-    SESSION debug
-    <?= var_dump($_SESSION) ?>
-    POST debug
-    <?= var_dump($_POST) ?>
-    GET debug
-    <?= var_dump($_GET) ?>
-</pre>
+<h3>Earlier Rolls</h3>
+<!-- <?= $histogram->getStatistics() ?> -->
+<?= $histogram->getAsText() ?>
 <hr>
