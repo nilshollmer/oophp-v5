@@ -12,6 +12,5 @@ namespace Anax\View;
 
 ?>
 <h3>Earlier Rolls</h3>
-<!-- <?= $histogram->getStatistics() ?> -->
 <?= $histogram->getAsText() ?>
 <hr>

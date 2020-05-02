@@ -86,6 +86,14 @@ class DiceHand implements HistogramInterface
      */
     public function getDiceHandAsString()
     {
+        $output = "<p>";
+        foreach ($this->handValues as $dice) {
+            $output .= '<i class="dice-sprite dice-' . $dice . '"></i>';
+        }
+        $output .= "</p>";
+
+
+        return $output;
         return implode(", ", $this->handValues);
     }
 

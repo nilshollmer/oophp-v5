@@ -131,6 +131,7 @@ class DiceController implements AppInjectableInterface
         ];
 
         $page->add("dice/play", $data);
+        $page->add("dice/histogramStatistics", $data, "sidebar-left");
         $page->add("dice/histogram", $data, "sidebar-right");
         // $page->add("dice/debug");
 

@@ -25,7 +25,7 @@ class Histogram
     public function __construct()
     {
         foreach (range($this->min, $this->max) as $key) {
-            $this->rolls[$key] = "";
+            $this->rolls[$key] = 0;
         }
     }
 
@@ -51,7 +51,7 @@ class Histogram
     {
         $serie = $object->getHistogramSerie();
         foreach ($serie as $key) {
-            $this->rolls[$key] .= "*";
+            $this->rolls[$key]++;
         }
         array_unshift($this->serie, $serie);
     }
@@ -66,8 +66,8 @@ class Histogram
     {
         $output = "";
 
-        foreach (array_keys($this->rolls) as $key) {
-            $output .= "<p>" . $key . ": " . $this->rolls[$key] . "</p>";
+        foreach (array_keys($this->rolls) as $dice) {
+            $output .= '<p><i class="dice-sprite dice-' . $dice . '"></i>: ' . $this->rolls[$dice] . '</p>';
         }
 
         return $output;
@@ -84,9 +84,25 @@ class Histogram
         $sizeOfOutput = 6;
 
         foreach (array_slice($this->serie, 0, $sizeOfOutput) as $hand) {
-            $output .= "<p>" . implode(", ", $hand) . "</p>";
+            $output .= "<p>";
+
+            foreach ($hand as $dice) {
+                $output .= '<i class="dice-sprite dice-' . $dice . '"></i>';
+            }
+            $output .= "</p>";
         }
 
         return $output;
+    }
+
+
+    /**
+     * Get the average of all rolls
+     *
+     * @return float
+     */
+    public function getAverageRoll()
+    {
+        return round(array_sum($this->rolls) / count($this->rolls), 2);
     }
 }
