@@ -62,8 +62,8 @@ class Dice100Test extends TestCase
     public function testCheckHandWithValueSix()
     {
         // Run test with hand with value 6
-        $this->diceHand->addToHandValues(5);
-        $this->diceHand->addToHandValues(6);
+        $this->diceHand->addToSerie(5);
+        $this->diceHand->addToSerie(6);
         $this->game->checkHand($this->diceHand);
         $exp = 11;
         $res = $this->game->getGamestate()["currentPoints"];
@@ -76,8 +76,8 @@ class Dice100Test extends TestCase
     public function testCheckHandWithValueOne()
     {
         // Run test with hand with value 6
-        $this->diceHand->addToHandValues(1);
-        $this->diceHand->addToHandValues(2);
+        $this->diceHand->addToSerie(1);
+        $this->diceHand->addToSerie(2);
         $this->game->checkHand($this->diceHand);
         $exp = 0;
         $res = $this->game->getGamestate()["currentPoints"];
@@ -95,8 +95,8 @@ class Dice100Test extends TestCase
     public function testHoldHand()
     {
         // Call checkhand with hand of 12 twice
-        $this->diceHand->addToHandValues(6);
-        $this->diceHand->addToHandValues(6);
+        $this->diceHand->addToSerie(6);
+        $this->diceHand->addToSerie(6);
         $this->game->checkHand($this->diceHand);
         $this->game->checkHand($this->diceHand);
         $this->game->holdHand();
@@ -116,17 +116,17 @@ class Dice100Test extends TestCase
      */
     public function testComputerMove()
     {
-        $this->assertFalse($this->game->computerMove());
+        $this->assertFalse($this->game->computerMove(3));
         $this->game->startNextTurn();
-        $this->assertTrue($this->game->computerMove());
+        $this->assertTrue($this->game->computerMove(3));
 
         // Add points to currentPoints enough to pass treshhold
         // computerMove should return false
-        $this->diceHand->addToHandValues(6);
-        $this->diceHand->addToHandValues(6);
+        $this->diceHand->addToSerie(6);
+        $this->diceHand->addToSerie(6);
         $this->game->checkHand($this->diceHand);
         $this->game->checkHand($this->diceHand);
-        $this->assertFalse($this->game->computerMove());
+        $this->assertFalse($this->game->computerMove(3.5));
     }
 
     /**

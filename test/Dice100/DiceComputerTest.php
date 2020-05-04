@@ -33,8 +33,9 @@ class DiceComputerTest extends TestCase
     public function testCalculateMoveArgumentEqualsZero()
     {
         $dicecomputer= new DiceComputer();
-        $arg = 0;
-        $move = $dicecomputer->calculateMove($arg);
+        $arg1 = 0;
+        $arg2 = 3;
+        $move = $dicecomputer->calculateMove($arg1, $arg2);
 
         $this->assertTrue($move);
     }
@@ -46,8 +47,9 @@ class DiceComputerTest extends TestCase
     public function testCalculateMoveArgumentEqualsTwenty()
     {
         $dicecomputer= new DiceComputer();
-        $arg = 20;
-        $move = $dicecomputer->calculateMove($arg);
+        $arg1 = 20;
+        $arg2 = 3.5;
+        $move = $dicecomputer->calculateMove($arg1, $arg2);
 
         $this->assertFalse($move);
     }
@@ -59,8 +61,9 @@ class DiceComputerTest extends TestCase
     public function testCalculateMoveArgumentEqualsOneHundred()
     {
         $dicecomputer= new DiceComputer();
-        $arg = 100;
-        $move = $dicecomputer->calculateMove($arg);
+        $arg1 = 100;
+        $arg2 = 3;
+        $move = $dicecomputer->calculateMove($arg1, $arg2);
 
         $this->assertFalse($move);
     }
@@ -73,8 +76,37 @@ class DiceComputerTest extends TestCase
     {
         $dicecomputer= new DiceComputer();
         $dicecomputer->addPoints(99);
-        $arg = 1;
-        $move = $dicecomputer->calculateMove($arg);
+        $arg1 = 1;
+        $arg2 = 3;
+        $move = $dicecomputer->calculateMove($arg1, $arg2);
+
+        $this->assertFalse($move);
+    }
+
+    /**
+     * Construct object, add points equal to upper threshold
+     */
+    public function testAddPointsCalculateMoveUpperThreshold()
+    {
+        $dicecomputer= new DiceComputer();
+        $dicecomputer->addPoints(99);
+        $arg1 = 32;
+        $arg2 = 2;
+        $move = $dicecomputer->calculateMove($arg1, $arg2);
+
+        $this->assertFalse($move);
+    }
+
+    /**
+     * Construct object, add 30 points and a low average roll score
+     */
+    public function testAddPointsCalculateMoveLowAverageRoll()
+    {
+        $dicecomputer= new DiceComputer();
+        $dicecomputer->addPoints(99);
+        $arg1 = 30;
+        $arg2 = 2;
+        $move = $dicecomputer->calculateMove($arg1, $arg2);
 
         $this->assertFalse($move);
     }

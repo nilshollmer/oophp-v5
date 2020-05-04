@@ -29,7 +29,7 @@ class DiceHandTest extends TestCase
         $diceHand->rollDice();
         $exp = 2;
 
-        $this->assertEquals($exp, count($diceHand->getHandValues()));
+        $this->assertEquals($exp, count($diceHand->getSerie()));
     }
 
     /**
@@ -42,7 +42,7 @@ class DiceHandTest extends TestCase
         $diceHand->rollDice();
         $exp = 6;
 
-        $this->assertEquals($exp, count($diceHand->getHandValues()));
+        $this->assertEquals($exp, count($diceHand->getSerie()));
     }
 
     /**
@@ -66,14 +66,14 @@ class DiceHandTest extends TestCase
      * Construct object with argument and verify that handValues is an
      * array of numbers
      */
-    public function testDiceHandValues()
+    public function testDiceSerie()
     {
         $numDice = 20;
 
         $diceHand = new DiceHand($numDice);
         $diceHand->rollDice();
 
-        foreach ($diceHand->getHandValues() as $res) {
+        foreach ($diceHand->getSerie() as $res) {
             $this->assertIsNumeric($res);
         }
     }
@@ -82,7 +82,7 @@ class DiceHandTest extends TestCase
      * Construct object with argument, call getDiceHandAsString and verify
      * that result is a string
      */
-    public function testDiceHandValuesAsString()
+    public function testDiceSerieAsString()
     {
         $numDice = 20;
 
@@ -102,7 +102,7 @@ class DiceHandTest extends TestCase
         $numDice = 1;
 
         $diceHand = new DiceHand($numDice);
-        $diceHand->addToHandValues(1);
+        $diceHand->addToSerie(1);
 
         $this->assertTrue($diceHand->handContainsOne());
     }
@@ -116,7 +116,7 @@ class DiceHandTest extends TestCase
         $numDice = 1;
 
         $diceHand = new DiceHand($numDice);
-        $diceHand->addToHandValues(4);
+        $diceHand->addToSerie(4);
 
         $this->assertFalse($diceHand->handContainsOne());
     }
