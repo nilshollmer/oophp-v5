@@ -24,16 +24,25 @@ class DiceComputer extends DicePlayer
      *
      * @return Boolean
      */
-    public function calculateMove($currentPoints) : bool
+    public function calculateMove(int $currentPoints, float $avg) : bool
     {
-        $threshold = 16;
+        $upperTreshold = 32;
+        $lowerThreshold = 16;
         $winning = 100;
 
         if (($this->totalPoints + $currentPoints) >= $winning) {
             return false;
         }
 
-        if ($currentPoints > $threshold) {
+        if ($currentPoints >= $upperTreshold) {
+            return false;
+        }
+
+        if ($avg < 3.5) {
+            return true;
+        }
+
+        if ($currentPoints >= $lowerThreshold) {
             return false;
         }
 

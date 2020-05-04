@@ -14,5 +14,5 @@ interface HistogramInterface
      *
      * @return array with the serie
      */
-     public function getHistogramSerie();
+    public function getHistogramSerie();
 }

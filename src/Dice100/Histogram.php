@@ -41,6 +41,27 @@ class Histogram
     }
 
     /**
+     * Get average roll
+     *
+     * @return float with two decimals
+     */
+
+    public function getAverageRoll()
+    {
+        $numOfRolls = 0;
+        $sumOfRolls = 0;
+        foreach (array_keys($this->rolls) as $dice) {
+            $numOfRolls += $this->rolls[$dice];
+            $sumOfRolls +=  $this->rolls[$dice] * $dice;
+        }
+
+        if ($sumOfRolls == 0) {
+            return 0;
+        }
+        return round(($sumOfRolls / $numOfRolls), 2);
+    }
+
+    /**
      * Inject the object to use as base for histogram data
      *
      * @param HistogramInterface    $object The object holding the serie
@@ -78,7 +99,7 @@ class Histogram
      *
      * @return string representing the histogram.
      */
-    public function getAsText()
+    public function getIndividualRolls()
     {
         $output = "";
         $sizeOfOutput = 6;
@@ -93,16 +114,5 @@ class Histogram
         }
 
         return $output;
-    }
-
-
-    /**
-     * Get the average of all rolls
-     *
-     * @return float
-     */
-    public function getAverageRoll()
-    {
-        return round(array_sum($this->rolls) / count($this->rolls), 2);
     }
 }

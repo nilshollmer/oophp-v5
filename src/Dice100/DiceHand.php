@@ -12,10 +12,8 @@ class DiceHand implements HistogramInterface
 
     /**
      * @var array   diceInHand  Array of Dice
-     * @var array   handValues  Array of integer values
      */
     protected $diceInHand;
-    protected $handValues;
 
     /**
      * Setup array of dice
@@ -25,7 +23,6 @@ class DiceHand implements HistogramInterface
     public function __construct(int $numDice = 2)
     {
         $this->diceInHand = [];
-        $this->handValues = [];
 
         for ($i = 0; $i < $numDice; $i++) {
             $this->diceInHand[] = new Dice();
@@ -40,22 +37,21 @@ class DiceHand implements HistogramInterface
      */
     public function rollDice()
     {
-        $this->handValues = [];
+        $this->serie = [];
         foreach ($this->diceInHand as $dice) {
             $dice->roll();
-            $this->addToHandValues($dice->getLastRoll());
+            $this->addToSerie($dice->getLastRoll());
         }
-        $this->serie = $this->handValues;
     }
 
     /**
-     * Add a value to the end of handValues array
+     * Add a value to the end of serie array
      *
      * @param integer   $value      Value to add to array
      */
-    public function addToHandValues($value)
+    public function addToSerie($value)
     {
-        $this->handValues[] = $value;
+        $this->serie[] = $value;
     }
 
     /**
@@ -66,7 +62,7 @@ class DiceHand implements HistogramInterface
      */
     public function handContainsOne()
     {
-        return in_array(1, $this->handValues);
+        return in_array(1, $this->serie);
     }
 
     /**
@@ -74,9 +70,19 @@ class DiceHand implements HistogramInterface
      *
      * @return array            Array of integers
      */
-    public function getHandValues()
+    public function getSerie()
     {
-        return $this->handValues;
+        return $this->serie;
+    }
+
+    /**
+     * Return the dice in hand
+     *
+     * @return array            Array of integers
+     */
+    public function getDiceInHand()
+    {
+        return $this->diceInHand;
     }
 
     /**
@@ -86,15 +92,14 @@ class DiceHand implements HistogramInterface
      */
     public function getDiceHandAsString()
     {
-        $output = "<p>";
-        foreach ($this->handValues as $dice) {
+        $output = "";
+        foreach ($this->serie as $dice) {
             $output .= '<i class="dice-sprite dice-' . $dice . '"></i>';
         }
-        $output .= "</p>";
 
 
         return $output;
-        return implode(", ", $this->handValues);
+        return implode(", ", $this->serie);
     }
 
     /**
@@ -104,6 +109,6 @@ class DiceHand implements HistogramInterface
      */
     public function sumOfHand()
     {
-        return array_sum($this->handValues);
+        return array_sum($this->serie);
     }
 }

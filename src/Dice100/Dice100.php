@@ -79,12 +79,14 @@ class Dice100
     /**
      * Call Computer calculateMove method
      *
+     * @param float $avg  Average roll value
+     *
      * @return boolean
      */
-    public function computerMove()
+    public function computerMove(float $avg)
     {
         if ($this->gamestate["active"]->getType() == "Computer") {
-            return $this->gamestate["active"]->calculateMove($this->gamestate["currentPoints"]);
+            return $this->gamestate["active"]->calculateMove($this->gamestate["currentPoints"], $avg);
         }
         return false;
     }

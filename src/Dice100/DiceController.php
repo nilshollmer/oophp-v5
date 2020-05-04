@@ -18,6 +18,10 @@ use Anax\Commons\AppInjectableTrait;
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
+
+/**
+ * @codeCoverageIgnore
+ */
 class DiceController implements AppInjectableInterface
 {
     use AppInjectableTrait;
@@ -231,7 +235,7 @@ class DiceController implements AppInjectableInterface
         $response = $this->app->response;
         $session = $this->app->session;
 
-        if ($session->get("game")->computerMove()) {
+        if ($session->get("game")->computerMove($session->get("histogram")->getAverageRoll())) {
             $session->get("diceHand")->rollDice();
             $session->get("game")->checkHand($session->get("diceHand"));
             $session->get("histogram")->injectData($session->get("diceHand"));
