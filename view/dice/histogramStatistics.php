@@ -13,5 +13,5 @@ namespace Anax\View;
 ?>
 <h3>Statistics</h3>
 <p><?= $histogram->getStatistics() ?></p>
-<p>Average roll: <?= $histogram->getAverageRoll() ?></p>
 <hr>
+<p>Average: <?= $histogram->getAverageRoll() ?></p>
