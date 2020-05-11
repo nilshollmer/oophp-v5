@@ -13,7 +13,7 @@
  *
  */
 return [
-    "dsn"              => "mysql:host=localhost;dbname=test;",
+    "dsn"              => "mysql:host=localhost;dbname=oophp;",
     "username"         => "user",
     "password"         => "pass",
     "driver_options"   => [
