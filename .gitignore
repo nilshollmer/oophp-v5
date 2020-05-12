@@ -5,4 +5,4 @@ memory::
 composer.lock
 
 doc/
-config/database.php
+/config/database.php
