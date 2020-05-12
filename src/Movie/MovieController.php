@@ -56,10 +56,23 @@ class MovieController implements AppInjectableInterface
      *
      * @return string
      */
-    public function indexAction() : string
+    public function indexAction() : object
     {
         // Deal with the action and return a response.
-        return __METHOD__ . ", \$db is {$this->db}";
+        $title = "Movie database";
+
+        $this->app->db->connect();
+        $sql = "SELECT * FROM movie;";
+        $res = $this->app->db->executeFetchAll($sql);
+
+        $this->app->page->add("movie/index", [
+            "resultset" => $res,
+        ]);
+
+        return $this->app->page->render([
+            "title" => $title,
+        ]);
+        // return __METHOD__ . ", \$db is {$this->db}";
     }
 
 
