@@ -1,6 +1,6 @@
 <?php
 
-namespace Nihl\Movie;
+namespace Anax\Controller;
 
 use Anax\Commons\AppInjectableInterface;
 use Anax\Commons\AppInjectableTrait;
@@ -42,6 +42,7 @@ class MovieController implements AppInjectableInterface
     {
         // Use to initialise member variables.
         $this->db = "active";
+        $this->app->page->add("movie/movie-nav", [],"navbar");
 
         // Use $this->app to access the framework services.
     }
@@ -59,13 +60,13 @@ class MovieController implements AppInjectableInterface
     public function indexAction() : object
     {
         // Deal with the action and return a response.
-        $title = "Movie database";
+        $title = "Visa allt filmer";
 
         $this->app->db->connect();
         $sql = "SELECT * FROM movie;";
         $res = $this->app->db->executeFetchAll($sql);
 
-        $this->app->page->add("movie/index", [
+        $this->app->page->add("movie/show-all", [
             "resultset" => $res,
         ]);
 
@@ -73,6 +74,156 @@ class MovieController implements AppInjectableInterface
             "title" => $title,
         ]);
         // return __METHOD__ . ", \$db is {$this->db}";
+    }
+
+    /**
+     * This is the search-title method action, it handles:
+     * ANY METHOD mountpoint/search-title
+     *
+     * @return string
+     */
+    public function searchTitleActionGet() : object
+    {
+        // Deal with the action and return a response.
+        $title = "Sök titel";
+        $searchTitle = "";
+        $this->app->db->connect();
+
+        $searchTitle = $this->app->request->getGet("searchTitle");
+
+        $this->app->page->add("movie/search-title", [
+            "searchTitle" => $searchTitle
+        ]);
+        if ($searchTitle) {
+            $sql = "SELECT * FROM movie WHERE title LIKE ?;";
+            $res = $this->app->db->executeFetchAll($sql, [$searchTitle]);
+            $this->app->page->add("movie/show-all", [
+                "resultset" => $res,
+            ]);
+        }
+
+        return $this->app->page->render([
+            "title" => $title,
+        ]);
+    }
+
+    /**
+     * This is the search-year method action, it handles:
+     * ANY METHOD mountpoint/search-title
+     *
+     * @return string
+     */
+    public function searchYearActionGet() : object
+    {
+        // Deal with the action and return a response.
+        $title = "Sök år";
+        $this->app->db->connect();
+
+        $year1 = $this->app->request->getGet("year1") ?: 1900;
+        $year2 = $this->app->request->getGet("year2") ?: 2100;
+        $resultset = [];
+
+        $this->app->page->add("movie/search-year", [
+            "year1" => $year1,
+            "year2" => $year2
+        ]);
+
+        if ($year1 && $year2) {
+            $sql = "SELECT * FROM movie WHERE year >= ? AND year <= ?;";
+            $resultset = $this->app->db->executeFetchAll($sql, [$year1, $year2]);
+        } elseif ($year1) {
+            $sql = "SELECT * FROM movie WHERE year >= ?;";
+            $resultset = $this->app->db->executeFetchAll($sql, [$year1]);
+        } elseif ($year2) {
+            $sql = "SELECT * FROM movie WHERE year <= ?;";
+            $resultset = $this->app->db->executeFetchAll($sql, [$year2]);
+        }
+
+        $this->app->page->add("movie/show-all", [
+            "resultset" => $resultset,
+        ]);
+
+        return $this->app->page->render([
+            "title" => $title,
+        ]);
+    }
+
+    /**
+     *
+     *
+     * @return object
+     */
+    public function movieSelectAction() : object
+    {
+        // Deal with the action and return a response.
+        $title = "Välj film";
+        $this->app->db->connect();
+
+        $movieId = $this->app->request->getPost("movieId");
+        $doAction = $this->app->request->getPost("doAction");
+
+        if ($doAction == "Delete") {
+            $sql = "DELETE FROM movie WHERE id = ?;";
+            $this->app->db->execute($sql, [$movieId]);
+            return $this->app->response->redirect("movie");
+        } elseif ($doAction == "Add") {
+            $sql = "INSERT INTO movie (title, year, image) VALUES (?, ?, ?);";
+            $this->app->db->execute($sql, ["A title", 2017, "image/noimage.png"]);
+            $movieId = $this->app->db->lastInsertId();
+            return $this->app->response->redirect("movie/movie-edit/{$movieId}");
+        } elseif ($doAction == "Edit" && is_numeric($movieId)) {
+            return $this->app->response->redirect("movie/movie-edit/{$movieId}");
+        }
+
+        $sql = "SELECT id, title FROM movie;";
+        $movies = $this->app->db->executeFetchAll($sql);
+
+        $this->app->page->add("movie/movie-select", [
+            "movies" => $movies
+        ]);
+
+        return $this->app->page->render([
+            "title" => $title
+        ]);
+        // return __METHOD__ . ", \$db is {$this->db}, got argument '$value'";
+    }
+
+    /**
+     * This sample method action takes zero or one argument and you can use
+     * @param mixed $value with a default string.
+     *
+     * @return string
+     */
+    public function movieEditAction($value = null) : object
+    {
+        // Deal with the action and return a response.
+        $title = "Uppdatera film";
+        $this->app->db->connect();
+
+        $movieId = $value;
+        $movieTitle = $this->app->request->getPost("movieTitle");
+        $movieYear  = $this->app->request->getPost("movieYear");
+        $movieImage = $this->app->request->getPost("movieImage");
+
+        if ($this->app->request->getPost("doSave")) {
+            $sql = "UPDATE movie SET title = ?, year = ?, image = ? WHERE id = ?;";
+            $this->app->db->execute($sql, [$movieTitle, $movieYear, $movieImage, $movieId]);
+            header("Location: ?route=movie-edit&movieId=$movieId");
+            exit;
+        }
+
+
+        $sql = "SELECT * FROM movie WHERE id = ?;";
+        $movie = $this->app->db->executeFetchAll($sql, [$movieId]);
+
+        $this->app->page->add("movie/movie-edit", [
+            "movie" => $movie[0]
+        ]);
+
+        return $this->app->page->render([
+            "title" => $title
+        ]);
+        // return __METHOD__ . ", \$db is {$this->db}, got argument '$value'";
     }
 
 

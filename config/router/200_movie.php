@@ -3,11 +3,13 @@
  * Dice controller
  */
 return [
+    "mount" => "movie",
+
     "routes" => [
         [
             "info" => "Movie Controller.",
-            "mount" => "movie",
-            "handler" => "\Nihl\Movie\MovieController",
+            "mount" => null,
+            "handler" => "\Anax\Controller\MovieController",
         ],
     ]
 ];
