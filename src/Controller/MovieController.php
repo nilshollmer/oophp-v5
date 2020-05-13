@@ -64,7 +64,6 @@ class MovieController implements AppInjectableInterface
 
         $sql = "SELECT * FROM movie;";
         $res = $this->app->db->executeFetchAll($sql);
-
         $this->app->page->add("movie/show-all", [ "resultset" => $res ]);
 
         return $this->app->page->render([ "title" => $title ]);
@@ -118,7 +117,7 @@ class MovieController implements AppInjectableInterface
             $res = $this->app->db->executeFetchAll($sql, [$year1, $year2]);
         } elseif ($year1) {
             $sql = "SELECT * FROM movie WHERE year >= ?;";
-            $rest = $this->app->db->executeFetchAll($sql, [$year1]);
+            $res = $this->app->db->executeFetchAll($sql, [$year1]);
         } elseif ($year2) {
             $sql = "SELECT * FROM movie WHERE year <= ?;";
             $res = $this->app->db->executeFetchAll($sql, [$year2]);
@@ -146,19 +145,13 @@ class MovieController implements AppInjectableInterface
             $sql = "DELETE FROM movie WHERE id = ?;";
             $this->app->db->execute($sql, [$movieId]);
             return $this->app->response->redirect("movie");
-
-
         } elseif ($doAction == "Add") {
             $sql = "INSERT INTO movie (title, year, image) VALUES (?, ?, ?);";
             $this->app->db->execute($sql, ["A title", 2017, "image/noimage.png"]);
             $movieId = $this->app->db->lastInsertId();
             return $this->app->response->redirect("movie/movie-edit/{$movieId}");
-
-
         } elseif ($doAction == "Edit" && is_numeric($movieId)) {
             return $this->app->response->redirect("movie/movie-edit/{$movieId}");
-
-
         }
 
         $sql = "SELECT id, title FROM movie;";
