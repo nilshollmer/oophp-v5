@@ -18,6 +18,5 @@
         <input type="submit" name="doAction" value="Edit">
         <input type="submit" name="doAction" value="Delete">
     </p>
-    <p><a href="?">Show all</a></p>
     </fieldset>
 </form>

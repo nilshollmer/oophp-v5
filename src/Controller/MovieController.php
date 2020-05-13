@@ -42,6 +42,7 @@ class MovieController implements AppInjectableInterface
     {
         // Use to initialise member variables.
         $this->db = "active";
+        $this->app->db->connect();
         $this->app->page->add("movie/movie-nav", [],"navbar");
 
         // Use $this->app to access the framework services.
@@ -62,7 +63,6 @@ class MovieController implements AppInjectableInterface
         // Deal with the action and return a response.
         $title = "Visa allt filmer";
 
-        $this->app->db->connect();
         $sql = "SELECT * FROM movie;";
         $res = $this->app->db->executeFetchAll($sql);
 
@@ -87,7 +87,6 @@ class MovieController implements AppInjectableInterface
         // Deal with the action and return a response.
         $title = "Sök titel";
         $searchTitle = "";
-        $this->app->db->connect();
 
         $searchTitle = $this->app->request->getGet("searchTitle");
 
@@ -117,7 +116,6 @@ class MovieController implements AppInjectableInterface
     {
         // Deal with the action and return a response.
         $title = "Sök år";
-        $this->app->db->connect();
 
         $year1 = $this->app->request->getGet("year1") ?: 1900;
         $year2 = $this->app->request->getGet("year2") ?: 2100;
@@ -157,7 +155,6 @@ class MovieController implements AppInjectableInterface
     {
         // Deal with the action and return a response.
         $title = "Välj film";
-        $this->app->db->connect();
 
         $movieId = $this->app->request->getPost("movieId");
         $doAction = $this->app->request->getPost("doAction");
@@ -198,7 +195,6 @@ class MovieController implements AppInjectableInterface
     {
         // Deal with the action and return a response.
         $title = "Uppdatera film";
-        $this->app->db->connect();
 
         $movieId = $value;
         $movieTitle = $this->app->request->getPost("movieTitle");
