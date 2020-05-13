@@ -7,7 +7,7 @@ if (!$resultset) {
 }
 ?>
 
-<table>
+<table class="table">
     <tr class="first">
         <th>Rad</th>
         <th>Id</th>
@@ -20,7 +20,7 @@ if (!$resultset) {
     <tr>
         <td><?= $id ?></td>
         <td><?= $row->id ?></td>
-        <td><img class="thumb" src="<?= asset("$row->image") ?>?w=200&sharpen"></td>
+        <td><img src="<?= asset("$row->image") ?>?w=200&sharpen"></td>
         <td><?= $row->title ?></td>
         <td><?= $row->year ?></td>
     </tr>

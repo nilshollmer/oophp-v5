@@ -8,8 +8,7 @@
         "psr-4": {
             "Anax\\": "src/",
             "Nihl\\": "src/"
-        },
-        "files": ["src/Movie/functions.php"]
+        }
     },
     "require": {
         "anax/anax-oophp-me": "^2.0.0",
