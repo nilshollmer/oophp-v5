@@ -3,6 +3,7 @@
 namespace Nihl\TextFilter;
 
 use Michelf\MarkdownExtra;
+
 //
 // require __DIR__ . "/../../vendor/autoload.php";
 
@@ -19,12 +20,12 @@ class MyTextFilter
      *                     their respective handler.
      */
     private $filters = [
+        "esc"       => "esc",
+        "strip"     => "stripTags",
         "bbcode"    => "bbcode2html",
         "link"      => "makeClickable",
         "markdown"  => "markdown",
-        "nl2br"     => "nl2br",
-        "strip"     => "stripTags",
-        "esc"       => "esc"
+        "nl2br"     => "nl2br"
     ];
 
 
@@ -156,5 +157,17 @@ class MyTextFilter
     public function esc($text)
     {
         return htmlentities($text);
+    }
+
+    /**
+     * Return all available textfilters
+     *
+     *
+     * @return array of available filters
+     */
+    public function fetchTextFilters()
+    {
+
+        return array_keys($this->filters);
     }
 }

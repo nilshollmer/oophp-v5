@@ -23,13 +23,13 @@ class TextFilterController implements AppInjectableInterface
     use AppInjectableTrait;
 
 
-    //
-    // /**
-    //  * @var string $db a sample member variable that gets initialised
-    //  */
-    // private $db = "not active";
-    //
-    //
+
+    /**
+     * @var null $filter Textfilter to be initialized
+     */
+    private $filter = null;
+
+
     //
     /**
      * The initialize method is optional and will always be called before the
@@ -41,9 +41,8 @@ class TextFilterController implements AppInjectableInterface
     public function initialize() : void
     {
         // Use to initialise member variables.
+        $this->filter = new MyTextFilter();
         $this->app->page->add("textfilter/navbar", [], "main");
-
-        // Use $this->app to access the framework services.
     }
 
 
@@ -73,58 +72,71 @@ class TextFilterController implements AppInjectableInterface
 
     /**
      * This sample method action takes one argument:
-     * GET mountpoint/argument/<value>
+     * GET mountpoint/bbcode
      *
      * @param mixed $value
      *
      * @return string
      */
-    public function argumentActionGet($value) : string
+    public function bbcodeAction() : object
     {
+        $title = "BBcode";
+        $text = file_get_contents(__DIR__ . "/textfiles/bbcode.txt");
+        // $filter = new MyTextFilter();
+
         // Deal with the action and return a response.
-        return __METHOD__ . ", \$db is {$this->db}, got argument '$value'";
+        $this->app->page->add("textfilter/bbcode", [
+            "text" => $text,
+            "html" => $this->filter->parse($text, ["bbcode"])
+        ], "main");
+        return $this->app->page->render([ "title" => $title ]);
     }
 
 
 
     /**
-     * This sample method action takes zero or one argument and you can use - as a separator which will then be removed:
-     * GET mountpoint/defaultargument/
-     * GET mountpoint/defaultargument/<value>
-     * GET mountpoint/default-argument/
-     * GET mountpoint/default-argument/<value>
+     * This sample method action takes one argument:
+     * GET mountpoint/markdown
      *
-     * @param mixed $value with a default string.
+     * @param mixed $value
      *
      * @return string
      */
-    public function defaultArgumentActionGet($value = "default") : string
+    public function markdownAction() : object
     {
+        $title = "Markdown";
+        $text = file_get_contents(__DIR__ . "/textfiles/sample.md");
+        // $filter = new MyTextFilter();
+
         // Deal with the action and return a response.
-        return __METHOD__ . ", \$db is {$this->db}, got argument '$value'";
+        $this->app->page->add("textfilter/markdown", [
+            "text" => $text,
+            "html" => $this->filter->parse($text, ["markdown"])
+        ], "main");
+        return $this->app->page->render([ "title" => $title ]);
     }
-
-
 
     /**
-     * This sample method action takes two typed arguments:
-     * GET mountpoint/typed-argument/<string>/<int>
+     * This sample method action takes one argument:
+     * GET mountpoint/clickable
      *
-     * NOTE. Its recommended to not use int as type since it will still
-     * accept numbers such as 2hundred givving a PHP NOTICE. So, its better to
-     * deal with type check within the action method and throuw exceptions
-     * when the expected type is not met.
-     *
-     * @param mixed $value with a default string.
+     * @param mixed $value
      *
      * @return string
      */
-    public function typedArgumentActionGet(string $str, int $int) : string
+    public function linkAction() : object
     {
-        // Deal with the action and return a response.
-        return __METHOD__ . ", \$db is {$this->db}, got string argument '$str' and int argument '$int'.";
-    }
+        $title = "Markdown";
+        $text = file_get_contents(__DIR__ . "/textfiles/clickable.txt");
+        // $filter = new MyTextFilter();
 
+        // Deal with the action and return a response.
+        $this->app->page->add("textfilter/clickable", [
+            "text" => $text,
+            "html" => $this->filter->parse($text, ["link"])
+        ], "main");
+        return $this->app->page->render([ "title" => $title ]);
+    }
 
 
     /**
@@ -139,32 +151,24 @@ class TextFilterController implements AppInjectableInterface
      *
      * @return string
      */
-    public function variadicActionGet(...$value) : string
+    public function multiAction() : object
     {
         // Deal with the action and return a response.
-        return __METHOD__ . ", \$db is {$this->db}, got '" . count($value) . "' arguments: " . implode(", ", $value);
-    }
 
+        $title = "Multi";
+        $filters = $this->filter->fetchTextFilters();
+        $text = file_get_contents(__DIR__ . "/textfiles/multi.txt");
+        $applied = $this->app->request->getGet();
+        $html = $applied ? $this->filter->parse($text, $applied) : $text;
 
+        // Deal with the action and return a response.
+        $this->app->page->add("textfilter/multi", [
+            "text" => $text,
+            "html" => $html,
+            "filters" => $filters,
+            "applied" => $applied,
+        ], "main");
 
-    /**
-     * Adding an optional catchAll() method will catch all actions sent to the
-     * router. You can then reply with an actual response or return void to
-     * allow for the router to move on to next handler.
-     * A catchAll() handles the following, if a specific action method is not
-     * created:
-     * ANY METHOD mountpoint/**
-     *
-     * @param array $args as a variadic parameter.
-     *
-     * @return mixed
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function catchAll(...$args)
-    {
-        // Deal with the request and send an actual response, or not.
-        //return __METHOD__ . ", \$db is {$this->db}, got '" . count($args) . "' arguments: " . implode(", ", $args);
-        return;
+        return $this->app->page->render([ "title" => $title ]);
     }
 }
