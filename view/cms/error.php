@@ -1,3 +1,3 @@
-<h1>Error</h1>
+<h4>Error</h4>
 
-<pre><?= $error ?></pre>
+<?= $error ?>

@@ -4,7 +4,7 @@ namespace Nihl\Content;
 
 use Anax\Commons\AppInjectableTrait;
 use Anax\Commons\AppInjectableInterface;
-
+use Nihl\TextFilter\MyTextFilter;
 /**
  * A sample controller to show how a controller class can be implemented.
  * The controller will be injected with $app if implementing the interface
@@ -177,14 +177,14 @@ class ContentController implements AppInjectableInterface
                 "contentId"
             ]);
 
-            try {
-                Content::contentUpdate($this->app->db, $params);
-            } catch (Exception $e){
-                $this->errormessage = $e;
-                return $this->app->response->redirect("content/error");
+            $res = Content::contentUpdate($this->app->db, $params);
+
+            if ($res) {
+                return $this->app->response->redirect("content/edit/" . $params["contentId"]);
             }
 
-            return $this->app->response->redirect("content/edit/" . $params["contentId"]);
+            $this->errormessage = "Path or slug already exists";
+            return $this->app->response->redirect("content/error");
         }
 
 
@@ -248,8 +248,10 @@ class ContentController implements AppInjectableInterface
     public function pagesAction($path = null) : object
     {
         if ($path) {
+            $textFilter = new MyTextFilter();
             $content = Content::contentFetchPage($this->app->db, $path);
             $title = $content->title;
+            $content->data = $textFilter->parse($content->data, explode(",", $content->filter));
             $this->app->page->add("cms/page", [ "content" => $content ]);
             return $this->app->page->render([ "title" => $title ]);
         }
@@ -272,8 +274,10 @@ class ContentController implements AppInjectableInterface
     public function blogAction($slug = null) : object
     {
         if ($slug) {
+            $textFilter = new MyTextFilter();
             $content = Content::contentFetchBlogPost($this->app->db, $slug);
             $title = $content->title;
+            $content->data = $textFilter->parse($content->data, explode(",", $content->filter));
             $this->app->page->add("cms/blogpost", [ "content" => $content ]);
             return $this->app->page->render([ "title" => $title ]);
         }

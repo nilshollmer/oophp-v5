@@ -2,36 +2,13 @@
 
 namespace Nihl\Content;
 
+/**
+ * Functions for dealing with content
+ */
+
 
 class Content
 {
-    /**
-     * @var integer     $id         Id of content
-     * @var string      $title      title of content
-     * @var string      $type       Type of content, page or post
-     * @var string      $path       Path to content
-     * @var string      $slug       URL-slug to content
-     * @var string      $data       Data in content
-     * @var array       $filter     Filters applied to content
-     * @var integer     $created    Datetime of creation
-     * @var integer     $published  Datetime of publication
-     * @var integer     $updated    Datetime of update
-     * @var integer     $deleted    Datetime of deletion
-     */
-    public $id;
-    public $title;
-    public $type;
-    public $path;
-    public $slug;
-    public $data;
-    public $filter;
-    public $created;
-    public $published;
-    public $updated;
-    public $deleted;
-
-
-
     /**
      * Fetch all entries in $db
      *
@@ -95,13 +72,14 @@ class Content
                 $params["contentPath"] = null;
         }
 
-        $sql = "UPDATE content SET title=?, path=?, slug=?, data=?, type=?, filter=?, published=? WHERE id = ?;";
-
-        try {
-            $db->execute($sql, array_values($params));
-        } catch (Exception $e) {
-            var_dump("hej");
+        if (Content::contentTypeExists($db, $params["contentPath"], $params["contentSlug"])) {
+            return false;
         }
+
+        $sql = "UPDATE content SET title=?, path=?, slug=?, data=?, type=?, filter=?, published=? WHERE id = ?;";
+        $db->execute($sql, array_values($params));
+
+        return true;
     }
 
 
@@ -110,7 +88,7 @@ class Content
      * Set content with id to deleted
      *
      * @param Database  $db     Database to fetch from
-     * @param Array     $id     Content to delete
+     * @param Integer   $id     Content to delete
      *
      * @return resultset
      */
@@ -118,6 +96,7 @@ class Content
         $sql = "UPDATE content SET deleted=NOW() WHERE id = ?;";
         $db->execute($sql, [$id]);
     }
+
 
 
     /**
@@ -223,18 +202,11 @@ EOD;
 
 
     /**
-     * Set
+     * Check if slug or path already exists
      */
-    public function __set($name, $value) {
-        $this[$name] = $value;
-    }
+    public static function contentTypeExists($db, $path, $slug) {
+        $sql = "SELECT * FROM content WHERE path = ? OR slug = ?;";
 
-
-
-    /**
-     * Get
-     */
-    public function __get($name) {
-        return $this[$name];
+        return $db->executeFetchAll($sql, [$path, $slug]);
     }
 }
