@@ -177,14 +177,19 @@ class ContentController implements AppInjectableInterface
                 "contentId"
             ]);
 
-            $res = Content::contentUpdate($this->app->db, $params);
-
-            if ($res) {
-                return $this->app->response->redirect("content/edit/" . $params["contentId"]);
+            try {
+                Content::contentUpdate($this->app->db, $params);
+            } catch (Exception $e) {
+                $this->errormessage = $e->getMessage;
+                return $this->app->response->redirect("content/error");
             }
 
-            $this->errormessage = "Path or slug already exists";
-            return $this->app->response->redirect("content/error");
+            // if ($res) {
+            //     return $this->app->response->redirect("content/edit/" . $params["contentId"]);
+            // }
+            //
+            // $this->errormessage = "Path or slug already exists";
+            // return $this->app->response->redirect("content/error");
         }
 
 

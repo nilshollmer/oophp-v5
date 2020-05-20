@@ -61,7 +61,7 @@ class Content
      * @param Database  $db     Database to fetch from
      * @param Array     $params Parameters to update with
      *
-     * @return resultset
+     * @return boolean
      */
     public static function contentUpdate($db, $params) {
         if (!$params["contentSlug"]) {
@@ -72,14 +72,22 @@ class Content
                 $params["contentPath"] = null;
         }
 
-        if (Content::contentTypeExists($db, $params["contentPath"], $params["contentSlug"])) {
-            return false;
+
+        try {
+            $sql = "UPDATE content SET title=?, path=?, slug=?, data=?, type=?, filter=?, published=? WHERE id = ?;";
+            $db->execute($sql, array_values($params));
+        } catch (Exception $e) {
+            throw $e;
         }
-
-        $sql = "UPDATE content SET title=?, path=?, slug=?, data=?, type=?, filter=?, published=? WHERE id = ?;";
-        $db->execute($sql, array_values($params));
-
-        return true;
+        
+        // if (Content::contentTypeExists($db, $params["contentPath"], $params["contentSlug"])) {
+        //     return false;
+        // }
+        //
+        // $sql = "UPDATE content SET title=?, path=?, slug=?, data=?, type=?, filter=?, published=? WHERE id = ?;";
+        // $db->execute($sql, array_values($params));
+        //
+        // return true;
     }
 
 
