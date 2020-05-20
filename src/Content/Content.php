@@ -16,7 +16,8 @@ class Content
      *
      * @return resultset
      */
-    public static function contentFetchAll($db) {
+    public static function contentFetchAll($db)
+    {
         $sql = "SELECT * FROM content;";
         return $db->executeFetchAll($sql);
     }
@@ -31,7 +32,8 @@ class Content
      *
      * @return integer id of last inserted content
      */
-    public static function contentCreate($db, $title) {
+    public static function contentCreate($db, $title)
+    {
         $sql = "INSERT INTO content (title) VALUES (?);";
         $db->execute($sql, [$title]);
 
@@ -48,7 +50,8 @@ class Content
      *
      * @return resultset
      */
-    public static function contentFetch($db, $id) {
+    public static function contentFetch($db, $id)
+    {
         $sql = "SELECT * FROM content WHERE id = ?;";
         return $db->executeFetch($sql, [$id]);
     }
@@ -63,31 +66,23 @@ class Content
      *
      * @return boolean
      */
-    public static function contentUpdate($db, $params) {
+    public static function contentUpdate($db, $params)
+    {
         if (!$params["contentSlug"]) {
             $params["contentSlug"] = slugify($params["contentTitle"]);
         }
 
         if (!$params["contentPath"]) {
-                $params["contentPath"] = null;
+            $params["contentPath"] = null;
         }
 
 
         try {
             $sql = "UPDATE content SET title=?, path=?, slug=?, data=?, type=?, filter=?, published=? WHERE id = ?;";
             $db->execute($sql, array_values($params));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
-        
-        // if (Content::contentTypeExists($db, $params["contentPath"], $params["contentSlug"])) {
-        //     return false;
-        // }
-        //
-        // $sql = "UPDATE content SET title=?, path=?, slug=?, data=?, type=?, filter=?, published=? WHERE id = ?;";
-        // $db->execute($sql, array_values($params));
-        //
-        // return true;
     }
 
 
@@ -100,7 +95,8 @@ class Content
      *
      * @return resultset
      */
-    public static function contentDelete($db, $id) {
+    public static function contentDelete($db, $id)
+    {
         $sql = "UPDATE content SET deleted=NOW() WHERE id = ?;";
         $db->execute($sql, [$id]);
     }
@@ -114,7 +110,8 @@ class Content
      *
      * @return resultset
      */
-    public static function contentFetchAllPages($db) {
+    public static function contentFetchAllPages($db)
+    {
         $sql = <<<EOD
 SELECT
     *,
@@ -139,7 +136,8 @@ EOD;
      *
      * @return resultset
      */
-    public static function contentFetchAllPosts($db) {
+    public static function contentFetchAllPosts($db)
+    {
         $sql = <<<EOD
 SELECT
     *,
@@ -163,7 +161,8 @@ EOD;
      *
      * @return resultset
      */
-    public static function contentFetchBlogPost($db, $slug) {
+    public static function contentFetchBlogPost($db, $slug)
+    {
         $sql = <<<EOD
 SELECT
     *,
@@ -189,7 +188,8 @@ EOD;
      *
      * @return resultset
      */
-    public static function contentFetchPage($db, $path) {
+    public static function contentFetchPage($db, $path)
+    {
         $sql = <<<EOD
 SELECT
     *,
@@ -204,17 +204,5 @@ WHERE
 ;
 EOD;
         return $db->executeFetch($sql, [$path, "page"]);
-    }
-
-
-
-
-    /**
-     * Check if slug or path already exists
-     */
-    public static function contentTypeExists($db, $path, $slug) {
-        $sql = "SELECT * FROM content WHERE path = ? OR slug = ?;";
-
-        return $db->executeFetchAll($sql, [$path, $slug]);
     }
 }

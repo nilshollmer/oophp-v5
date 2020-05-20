@@ -1,6 +1,7 @@
 <?php
 
 namespace Anax\View;
+
 ?>
 
 <form action="<?= url("content/create") ?>" method="post">

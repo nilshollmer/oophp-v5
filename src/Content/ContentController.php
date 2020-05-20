@@ -5,6 +5,7 @@ namespace Nihl\Content;
 use Anax\Commons\AppInjectableTrait;
 use Anax\Commons\AppInjectableInterface;
 use Nihl\TextFilter\MyTextFilter;
+
 /**
  * A sample controller to show how a controller class can be implemented.
  * The controller will be injected with $app if implementing the interface
@@ -13,6 +14,7 @@ use Nihl\TextFilter\MyTextFilter;
  * requests for that mount point.
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.StaticAccess)
  */
 
 class ContentController implements AppInjectableInterface
@@ -20,14 +22,11 @@ class ContentController implements AppInjectableInterface
     use AppInjectableTrait;
 
 
-
     /**
      * @var string $db
      * @var string $errormessage
      */
     private $db = "not active";
-    private $errormessage = "";
-
 
 
     /**
@@ -58,15 +57,8 @@ class ContentController implements AppInjectableInterface
      */
     public function indexAction() : object
     {
-        // Deal with the action and return a response.
         $title = "Content";
 
-        // $sql = "SELECT * FROM content;";
-        // $res = $this->app->db->executeFetchAll($sql);
-
-        // $obj = new Content();
-        // $res = $this->app->db->executeFetchInto($sql, [], $obj);
-        // var_dump($res);
         $res = Content::contentFetchAll($this->app->db);
 
         $this->app->page->add("cms/index", [ "res" => $res ]);
@@ -83,12 +75,10 @@ class ContentController implements AppInjectableInterface
      */
     public function adminAction() : object
     {
-        // Deal with the action and return a response.
         $title = "Admin";
-        //
-        // $sql = "SELECT * FROM content;";
-        // $res = $this->app->db->executeFetchAll($sql);
+
         $res = Content::contentFetchAll($this->app->db);
+
         $this->app->page->add("cms/admin", [ "res" => $res ]);
 
         return $this->app->page->render([ "title" => $title ]);
@@ -102,11 +92,9 @@ class ContentController implements AppInjectableInterface
      */
     public function createAction() : object
     {
-        // Deal with the action and return a response.
+
         $title = "Create";
-        // $sql = "SELECT * FROM content;";
-        // $res = $this->app->db->executeFetchAll($sql);
-        // $res = Content::contentFetchAll($this->app->db);
+
         $this->app->page->add("cms/create", []);
 
         return $this->app->page->render([ "title" => $title ]);
@@ -120,13 +108,13 @@ class ContentController implements AppInjectableInterface
      */
     public function createActionPost() : object
     {
-        // Deal with the action and return a response.
-
         $title = $this->app->request->getPost("title", null);
+
         if ($title) {
             $id = Content::contentCreate($this->app->db, $title);
             return $this->app->response->redirect("content/edit/{$id}");
         }
+
         return $this->app->response->redirect("content");
     }
 
@@ -140,11 +128,11 @@ class ContentController implements AppInjectableInterface
      */
     public function editAction($id) : object
     {
-        // Deal with the action and return a response.
         $title = "Create";
 
         if (!is_numeric($id)) {
-            die("Not valid for content id.");
+            $this->app->session->set("error", "{$id} is not valid for content id.");
+            return $this->app->response->redirect("content/error");
         }
 
         $content = Content::contentFetch($this->app->db, $id);
@@ -163,8 +151,6 @@ class ContentController implements AppInjectableInterface
      */
     public function editActionPost() : object
     {
-        // Deal with the action and return a response.
-
         if (hasKeyPost("doSave")) {
             $params = getPostArray([
                 "contentTitle",
@@ -179,17 +165,10 @@ class ContentController implements AppInjectableInterface
 
             try {
                 Content::contentUpdate($this->app->db, $params);
-            } catch (Exception $e) {
-                $this->errormessage = $e->getMessage;
+            } catch (\Exception $e) {
+                $this->app->session->set("error", "Duplicate slug or path not allowed");
                 return $this->app->response->redirect("content/error");
             }
-
-            // if ($res) {
-            //     return $this->app->response->redirect("content/edit/" . $params["contentId"]);
-            // }
-            //
-            // $this->errormessage = "Path or slug already exists";
-            // return $this->app->response->redirect("content/error");
         }
 
 
@@ -210,11 +189,11 @@ class ContentController implements AppInjectableInterface
      */
     public function deleteAction($id) : object
     {
-        // Deal with the action and return a response.
         $title = "Delete";
 
         if (!is_numeric($id)) {
-            die("Not valid for content id.");
+            $this->app->session->set("error", "{$id} is not valid for content id.");
+            return $this->app->response->redirect("content/error");
         }
 
         $content = Content::contentFetch($this->app->db, $id);
@@ -233,8 +212,8 @@ class ContentController implements AppInjectableInterface
      */
     public function deleteActionPost() : object
     {
-        // Deal with the action and return a response.
         $id = $this->app->request->getPost("contentId");
+
         if ($id) {
             Content::contentDelete($this->app->db, $id);
         }
@@ -305,8 +284,8 @@ class ContentController implements AppInjectableInterface
     public function errorAction() : object
     {
         $title = "Error";
-
-        $this->app->page->add("cms/error", [ "error" => $this->errormessage ]);
+        $error = $this->app->session->get("error");
+        $this->app->page->add("cms/error", [ "error" => $error]);
 
         return $this->app->page->render([ "title" => $title ]);
     }
