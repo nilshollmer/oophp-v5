@@ -21,7 +21,7 @@ return [
             "stylesheets" => [
                 // Change here to set another default stylesheet
                 "css/dbwebb-se.min.css",
-                //"css/another.min.css",
+                "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
             ],
             "javascripts" => [
                 "js/responsive-menu.js",
