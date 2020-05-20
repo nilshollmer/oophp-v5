@@ -1,4 +1,7 @@
 <?php
+
+namespace Anax\View;
+
 if (!$res) {
     return;
 }
@@ -17,7 +20,7 @@ if (!$res) {
     $id++; ?>
     <tr>
         <td><?= $row->id ?></td>
-        <td><a href="?route=<?= $row->path ?>"><?= $row->title ?></a></td>
+        <td><a href="<?= url("content/pages") . "/" . esc($row->path) ?>"><?= $row->title ?></a></td>
         <td><?= $row->type ?></td>
         <td><?= $row->status ?></td>
         <td><?= $row->published ?></td>
